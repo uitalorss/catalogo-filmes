@@ -6,9 +6,11 @@ import {
   Param,
   Delete,
   Res,
+  HttpCode,
 } from '@nestjs/common';
 import { FilmsService } from './films.service';
 import { CreateFilmDto } from './dto/create-film.dto';
+import { instanceToInstance } from 'class-transformer';
 
 @Controller('films')
 export class FilmsController {
@@ -21,13 +23,16 @@ export class FilmsController {
   }
 
   @Get()
-  findAll() {
-    return this.filmsService.findAll();
+  public async findAll(@Res() res) {
+    const films = await this.filmsService.findAll();
+
+    return res.json(instanceToInstance(films));
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.filmsService.findOne(+id);
+  public async findOne(@Res() res, @Param('id') id: string) {
+    const film = await this.filmsService.findOne(id);
+    return res.json(instanceToInstance(film));
   }
 
   // @Patch(':id')
@@ -35,8 +40,10 @@ export class FilmsController {
   //   return this.filmsService.update(+id, updateFilmDto);
   // }
 
+  @HttpCode(204)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.filmsService.remove(+id);
+  public async remove(@Res() res, @Param('id') id: string) {
+    await this.filmsService.remove(id);
+    return res.send();
   }
 }

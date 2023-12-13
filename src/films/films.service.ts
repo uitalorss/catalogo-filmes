@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateFilmDto } from './dto/create-film.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Film } from './entities/film.entity';
@@ -60,20 +64,44 @@ export class FilmsService {
     return film;
   }
 
-  findAll() {
-    return `This action returns all films`;
+  public async findAll() {
+    const films = await this.filmRepository.find({
+      relations: {
+        artists: true,
+        genres: true,
+        contentRating: true,
+      },
+    });
+    return films;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} film`;
+  public async findOne(id: string) {
+    const film = await this.filmRepository.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        artists: true,
+        genres: true,
+        contentRating: true,
+      },
+    });
+    if (!film) {
+      throw new NotFoundException('Filme não encontrado.');
+    }
+    return film;
   }
 
   // update(id: number, updateFilmDto: UpdateFilmDto) {
   //   return `This action updates a #${id} film`;
   // }
 
-  remove(id: number) {
-    return `This action removes a #${id} film`;
+  public async remove(id: string) {
+    const film = await this.filmRepository.findOneBy({ id });
+    if (!film) {
+      throw new NotFoundException('Filme não encontrado.');
+    }
+    await this.filmRepository.remove(film);
   }
 
   private async createOrLoadArtists(name: string) {

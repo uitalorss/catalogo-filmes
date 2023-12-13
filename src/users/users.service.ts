@@ -8,6 +8,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -16,16 +17,20 @@ export class UsersService {
     private userRepository: Repository<User>,
   ) {}
 
-  public async create(createUserDto: CreateUserDto) {
+  public async create({ name, email, password }: CreateUserDto) {
     const emailUserExists = await this.userRepository.findOneBy({
-      email: createUserDto.email,
+      email,
     });
     if (emailUserExists) {
       throw new BadRequestException('Usuário com email já cadastrado');
     }
 
+    const hashedPassword = await hash(password, 8);
+
     const user = this.userRepository.create({
-      ...createUserDto,
+      name,
+      email,
+      password: hashedPassword,
     });
 
     return await this.userRepository.save(user);
@@ -43,14 +48,23 @@ export class UsersService {
     return user;
   }
 
-  public async update(id: string, updateUserDto: UpdateUserDto) {
-    const user = await this.userRepository.preload({
-      ...updateUserDto,
-      id,
-    });
+  public async update(id: string, { name, email, password }: UpdateUserDto) {
+    const user = await this.userRepository.findOneBy({ id });
     if (!user) {
-      throw new NotFoundException('Usuário não encontrado');
+      throw new NotFoundException('Usuário não encontrado.');
     }
+
+    const userEmailAlreadyExists = await this.userRepository.findOneBy({
+      email,
+    });
+    if (userEmailAlreadyExists && userEmailAlreadyExists.email !== user.email) {
+      throw new BadRequestException('Esse email já está em uso.');
+    }
+
+    const hashedPassword = await hash(password, 8);
+    user.name = name;
+    user.email = email;
+    user.password = hashedPassword;
 
     return this.userRepository.save(user);
   }

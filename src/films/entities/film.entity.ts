@@ -21,6 +21,9 @@ export class Film {
   @Column({ type: 'text' })
   title: string;
 
+  @Column({ type: 'text' })
+  synopsis: string;
+
   @Column({ type: 'integer' })
   year: number;
 
@@ -33,12 +36,16 @@ export class Film {
   @JoinTable()
   genres: Genre[];
 
-  @ManyToMany(() => Artist, (artist) => artist.films)
+  @ManyToMany(() => Artist, (artist) => artist.films, {
+    cascade: true,
+  })
   @JoinTable()
   artists: Artist[];
 
-  @ManyToOne(() => ContentRating, (contentRating) => contentRating.films)
-  @JoinColumn({ name: 'acronym' })
+  @ManyToOne(() => ContentRating, (contentRating) => contentRating.films, {
+    cascade: true,
+  })
+  @JoinColumn({ name: 'ContentRating_id' })
   contentRating: ContentRating;
 
   @CreateDateColumn({ type: 'timestamptz' })

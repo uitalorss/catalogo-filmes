@@ -1,4 +1,3 @@
-import { Exclude } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -7,19 +6,24 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('users')
-export class User {
+@Entity('films')
+export class Film {
   @PrimaryGeneratedColumn('uuid')
   id: string;
   @Column({ type: 'text' })
-  name: string;
+  title: string;
+  @Column({ type: 'integer' })
+  year: number;
+  @Column({ type: 'integer' })
+  duration: number;
+  @Column({ type: 'json' })
+  genres: string[];
+  @Column({ type: 'json' })
+  mainActors: string[];
   @Column({ type: 'text' })
-  email: string;
-  @Column({ type: 'text' })
-  @Exclude()
-  password: string;
+  contentRating: string;
   @CreateDateColumn({ type: 'timestamptz' })
   created_at: Date;
   @UpdateDateColumn({ type: 'timestamptz' })
-  updated_at: string;
+  updated_at: Date;
 }

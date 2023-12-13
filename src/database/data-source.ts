@@ -1,3 +1,4 @@
+import { Film } from 'src/films/entities/film.entity';
 import { User } from 'src/users/entities/user.entity';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
@@ -9,7 +10,7 @@ export const dataSourceOptions: DataSourceOptions = {
   password: 'postgres',
   database: 'catalogofilmes',
   synchronize: false,
-  entities: [User],
+  entities: [User, Film],
 };
 
 export const dataSource = new DataSource({

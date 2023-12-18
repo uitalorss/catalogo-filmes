@@ -7,17 +7,24 @@ import {
   Delete,
   Res,
   HttpCode,
+  Put,
 } from '@nestjs/common';
 import { FilmsService } from './films.service';
-import { CreateFilmDto } from './dto/create-film.dto';
+import { CreateFilmDto, createFilmSchema } from './dto/create-film.dto';
 import { instanceToInstance } from 'class-transformer';
+import { ZodValidationPipe } from 'src/users/helpers/ZodValidationPipe';
+import { UpdateFilmDTO, partialFilmSchema } from './dto/update-film.dto';
 
 @Controller('films')
 export class FilmsController {
   constructor(private readonly filmsService: FilmsService) {}
 
   @Post()
-  public async create(@Res() res, @Body() createFilmDto: CreateFilmDto) {
+  @HttpCode(201)
+  public async create(
+    @Res() res,
+    @Body(new ZodValidationPipe(createFilmSchema)) createFilmDto: CreateFilmDto,
+  ) {
     const film = await this.filmsService.create(createFilmDto);
     return res.json(film);
   }
@@ -35,10 +42,17 @@ export class FilmsController {
     return res.json(instanceToInstance(film));
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateFilmDto: UpdateFilmDto) {
-  //   return this.filmsService.update(+id, updateFilmDto);
-  // }
+  @HttpCode(204)
+  @Put(':id')
+  update(
+    @Res() res,
+    @Body(new ZodValidationPipe(partialFilmSchema))
+    updateFilmDto: UpdateFilmDTO,
+    @Param('id') id: string,
+  ) {
+    this.filmsService.update(id, updateFilmDto);
+    return res.send();
+  }
 
   @HttpCode(204)
   @Delete(':id')

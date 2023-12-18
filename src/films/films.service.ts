@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { Artist } from './entities/artist.entity';
 import { Genre } from './entities/genre.entity';
 import { ContentRating } from './entities/contentRating.entity';
+import { UpdateFilmDTO } from './dto/update-film.dto';
 // import { UpdateFilmDto } from './dto/update-film.dto';
 
 @Injectable()
@@ -92,9 +93,39 @@ export class FilmsService {
     return film;
   }
 
-  // update(id: number, updateFilmDto: UpdateFilmDto) {
-  //   return `This action updates a #${id} film`;
-  // }
+  public async update(id: string, updateFilmDto: UpdateFilmDTO) {
+    const filmAlreadyExists = await this.filmRepository.findOneBy({ id });
+    if (!filmAlreadyExists) {
+      throw new NotFoundException('Filme não encontrado');
+    }
+    if (filmAlreadyExists && filmAlreadyExists.id !== id) {
+      throw new BadRequestException('Nome do filme já incluso na lista');
+    }
+    const genresList =
+      updateFilmDto.genres &&
+      (await Promise.all(
+        updateFilmDto.genres.map((item) => this.createOrLoadGenres(item)),
+      ));
+
+    const artistsList =
+      updateFilmDto.artists &&
+      (await Promise.all(
+        updateFilmDto.artists.map((item) => this.createOrLoadArtists(item)),
+      ));
+
+    const nameContentRating =
+      updateFilmDto.contentRating &&
+      (await this.createOrLoadContentRating(updateFilmDto.contentRating));
+
+    const film = await this.filmRepository.preload({
+      id,
+      ...updateFilmDto,
+      genres: genresList,
+      artists: artistsList,
+      contentRating: nameContentRating,
+    });
+    await this.filmRepository.save(film);
+  }
 
   public async remove(id: string) {
     const film = await this.filmRepository.findOneBy({ id });

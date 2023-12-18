@@ -1,4 +1,6 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateFilmDto } from './create-film.dto';
+import { createFilmSchema } from './create-film.dto';
+import { z } from 'zod';
 
-export class UpdateFilmDto extends PartialType(CreateFilmDto) {}
+const partialFilmSchema = createFilmSchema.partial();
+
+export type UpdateFilmDTO = z.infer<typeof partialFilmSchema>;

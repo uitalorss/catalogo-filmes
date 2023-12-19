@@ -9,12 +9,15 @@ import {
   Res,
   UsePipes,
   Put,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, createUserSchema } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ZodValidationPipe } from './helpers/ZodValidationPipe';
 import { instanceToInstance } from 'class-transformer';
+import { authGuard } from 'src/auth/auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -28,15 +31,10 @@ export class UsersController {
     return res.json({ message: 'Cliente Cadastrado com sucesso' });
   }
 
+  @UseGuards(authGuard)
   @Get()
-  public async findAll(@Res() res) {
-    const users = await this.usersService.findAll();
-    return res.json(instanceToInstance(users));
-  }
-
-  @Get(':id')
-  public async findOne(@Res() res, @Param('id') id: string) {
-    const user = await this.usersService.findOne(id);
+  public async findOne(@Req() req, @Res() res) {
+    const user = await this.usersService.findOne(req.user);
     return res.json(instanceToInstance(user));
   }
 

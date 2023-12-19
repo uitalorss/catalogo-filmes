@@ -54,17 +54,27 @@ export class UsersService {
       throw new NotFoundException('Usuário não encontrado.');
     }
 
-    const userEmailAlreadyExists = await this.userRepository.findOneBy({
-      email,
-    });
-    if (userEmailAlreadyExists && userEmailAlreadyExists.email !== user.email) {
-      throw new BadRequestException('Esse email já está em uso.');
+    if (name) {
+      user.name = name;
     }
 
-    const hashedPassword = await hash(password, 8);
-    user.name = name;
-    user.email = email;
-    user.password = hashedPassword;
+    if (email) {
+      const userEmailAlreadyExists = await this.userRepository.findOneBy({
+        email,
+      });
+      if (
+        userEmailAlreadyExists &&
+        userEmailAlreadyExists.email !== user.email
+      ) {
+        throw new BadRequestException('Esse email já está em uso.');
+      }
+      user.email = email;
+    }
+
+    if (password) {
+      const hashedPassword = await hash(password, 8);
+      user.password = hashedPassword;
+    }
 
     return this.userRepository.save(user);
   }

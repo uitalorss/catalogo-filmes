@@ -17,12 +17,15 @@ export class EmailService {
     if (!user) {
       throw new NotFoundException('Usuário não encontrado.');
     }
-
     await this.mailerService.sendMail({
       from: `${process.env.MAIL_FROM} <${process.env.MAIL_FROM}>`,
       to: email,
       subject: 'Redefinição de senha',
-      text: 'teste',
+      template: 'resetPassword',
+      context: {
+        name: user.name,
+        token: '123',
+      },
     });
   }
 }

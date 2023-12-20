@@ -9,6 +9,8 @@ import {
   Put,
   UseGuards,
   Req,
+  Patch,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, createUserSchema } from './dto/create-user.dto';
@@ -16,6 +18,7 @@ import { UpdateUserDto, partialUserSchema } from './dto/update-user.dto';
 import { ZodValidationPipe } from './helpers/ZodValidationPipe';
 import { instanceToInstance } from 'class-transformer';
 import { authGuard } from 'src/auth/auth.guard';
+import { ResetPasswordDto } from './dto/ResetPassword.dto';
 
 @Controller('users')
 export class UsersController {
@@ -54,5 +57,14 @@ export class UsersController {
   @Delete()
   remove(@Req() req) {
     return this.usersService.remove(req.user);
+  }
+
+  @HttpCode(204)
+  @Patch('reset')
+  resetPassword(
+    @Query() query: { token: string },
+    @Body() resetPasswordDto: ResetPasswordDto,
+  ) {
+    this.usersService.resetPassword(query, resetPasswordDto);
   }
 }

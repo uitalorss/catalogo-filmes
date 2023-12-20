@@ -4,10 +4,12 @@ import { Module } from '@nestjs/common';
 import { EmailController } from './email.controller';
 import { EmailService } from './email.service';
 import { UsersModule } from 'src/users/users.module';
+import { UserTokenModule } from 'src/user-token/user-token.module';
 
 @Module({
   imports: [
     UsersModule,
+    UserTokenModule,
     MailerModule.forRoot({
       transport: {
         host: String(process.env.MAIL_HOST),

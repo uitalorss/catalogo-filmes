@@ -1,3 +1,4 @@
+import * as dotenv from 'dotenv';
 import {
   CanActivate,
   ExecutionContext,
@@ -6,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
+dotenv.config();
 
 @Injectable()
 export class authGuard implements CanActivate {
@@ -19,7 +21,7 @@ export class authGuard implements CanActivate {
     }
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: 'banana',
+        secret: process.env.JWT_KEY,
       });
       request['user'] = payload.sub;
     } catch (error) {

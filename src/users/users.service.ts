@@ -11,7 +11,8 @@ import { User } from './entities/user.entity';
 import { hash } from 'bcrypt';
 import { UserTokenService } from 'src/user-token/user-token.service';
 import { addHours, isAfter } from 'date-fns';
-import { ResetPasswordDto } from './dto/ResetPassword.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { queryTokenDto } from './dto/query-token.dto';
 
 @Injectable()
 export class UsersService {
@@ -99,7 +100,7 @@ export class UsersService {
   }
 
   public async resetPassword(
-    query: { token: string },
+    query: queryTokenDto,
     resetPasswordDto: ResetPasswordDto,
   ) {
     const userToken = await this.userTokenService.findByToken(query.token);

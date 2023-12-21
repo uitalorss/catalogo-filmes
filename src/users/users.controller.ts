@@ -18,7 +18,11 @@ import { UpdateUserDto, partialUserSchema } from './dto/update-user.dto';
 import { ZodValidationPipe } from './helpers/ZodValidationPipe';
 import { instanceToInstance } from 'class-transformer';
 import { authGuard } from 'src/auth/auth.guard';
-import { ResetPasswordDto } from './dto/ResetPassword.dto';
+import {
+  ResetPasswordDto,
+  resetPasswordSchema,
+} from './dto/reset-password.dto';
+import { queryTokenDto, queryTokenSchema } from './dto/query-token.dto';
 
 @Controller('users')
 export class UsersController {
@@ -62,9 +66,10 @@ export class UsersController {
   @HttpCode(204)
   @Patch('reset')
   resetPassword(
-    @Query() query: { token: string },
-    @Body() resetPasswordDto: ResetPasswordDto,
+    @Query(new ZodValidationPipe(queryTokenSchema)) query: queryTokenDto,
+    @Body(new ZodValidationPipe(resetPasswordSchema))
+    resetPasswordDto: ResetPasswordDto,
   ) {
-    this.usersService.resetPassword(query, resetPasswordDto);
+    return this.usersService.resetPassword(query, resetPasswordDto);
   }
 }

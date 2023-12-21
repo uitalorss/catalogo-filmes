@@ -1,6 +1,10 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { EmailService } from './email.service';
-import { SendMailForgotPasswordDto } from './dto/send-mail-dto';
+import {
+  SendMailForgotPasswordDto,
+  sendMailForgotPasswordSchema,
+} from './dto/send-mail-dto';
+import { ZodValidationPipe } from 'src/users/helpers/ZodValidationPipe';
 
 @Controller('email')
 export class EmailController {
@@ -8,7 +12,10 @@ export class EmailController {
 
   @HttpCode(201)
   @Post()
-  public async send(@Body() { email }: SendMailForgotPasswordDto) {
+  public async send(
+    @Body(new ZodValidationPipe(sendMailForgotPasswordSchema))
+    { email }: SendMailForgotPasswordDto,
+  ) {
     return this.emailService.sendMail({ email });
   }
 }

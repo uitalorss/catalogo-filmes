@@ -6,19 +6,19 @@ services:
     entrypoint: .docker/entrypoint.sh
     container_name: catalogo_app
     ports:
-      - '3000:3000'
+      - 3000:3000
     volumes:
       - .:/home/app
     depends_on:
       - db
 
   db:
-    build: .docker/postgres
+    image: postgres
     container_name: catalogo_db
     restart: always
     tty: true
     ports:
-      - '5430:5432'
+      - 5430:5432
     volumes:
       - .docker/dbdata:/var/lib/postgresql/data
     environment:

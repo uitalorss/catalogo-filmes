@@ -22,4 +22,13 @@ export class User {
   created_at: Date;
   @UpdateDateColumn({ type: 'timestamptz' })
   updated_at: string;
+
+  constructor(user?: Partial<User>) {
+    this.id = user?.id;
+    this.name = user?.name;
+    this.email = user?.email;
+    this.password = user?.password;
+    this.created_at = user?.created_at;
+    this.updated_at = user?.updated_at;
+  }
 }

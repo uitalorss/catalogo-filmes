@@ -9,17 +9,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
-import { UserTokenService } from 'src/user-token/user-token.service';
 import { addHours, isAfter } from 'date-fns';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { queryTokenDto } from './dto/query-token.dto';
+import { UserTokenService } from 'src/user-token/user-token.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    private readonly userTokenService: UserTokenService,
+    // private readonly userTokenService: UserTokenService,
   ) {}
 
   public async create({ name, email, password }: CreateUserDto) {
@@ -100,24 +100,24 @@ export class UsersService {
     return user;
   }
 
-  public async resetPassword(
-    query: queryTokenDto,
-    resetPasswordDto: ResetPasswordDto,
-  ) {
-    const userToken = await this.userTokenService.findByToken(query.token);
-    if (!userToken) {
-      throw new NotFoundException('Token inválido');
-    }
-    const user = await this.userRepository.findOneBy({ id: userToken.user_id });
-    if (!user) {
-      throw new NotFoundException('Usuário não encontrado.');
-    }
-    const compareDate = addHours(userToken.created_at, 2);
-    if (isAfter(Date.now(), compareDate)) {
-      throw new BadRequestException('Token expirado.');
-    }
-    const hashedPassword = await bcrypt.hash(resetPasswordDto.password, 8);
-    user.password = hashedPassword;
-    await this.userRepository.save(user);
-  }
+  // public async resetPassword(
+  //   query: queryTokenDto,
+  //   resetPasswordDto: ResetPasswordDto,
+  // ) {
+  //   const userToken = await this.userTokenService.findByToken(query.token);
+  //   if (!userToken) {
+  //     throw new NotFoundException('Token inválido');
+  //   }
+  //   const user = await this.userRepository.findOneBy({ id: userToken.user_id });
+  //   if (!user) {
+  //     throw new NotFoundException('Usuário não encontrado.');
+  //   }
+  //   const compareDate = addHours(userToken.created_at, 2);
+  //   if (isAfter(Date.now(), compareDate)) {
+  //     throw new BadRequestException('Token expirado.');
+  //   }
+  //   const hashedPassword = await bcrypt.hash(resetPasswordDto.password, 8);
+  //   user.password = hashedPassword;
+  //   await this.userRepository.save(user);
+  // }
 }

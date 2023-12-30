@@ -7,9 +7,14 @@ import { randomUUID } from 'crypto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserTokenService } from '../user-token/user-token.service';
+import { UserToken } from '../user-token/entities/userToken.entity';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { addHours } from 'date-fns';
 
 describe('UsersService', () => {
   let usersService: UsersService;
+  let userTokenService: UserTokenService;
   let usersRepository: Repository<User>;
   const id = randomUUID();
 
@@ -18,6 +23,12 @@ describe('UsersService', () => {
     name: 'test',
     email: 'test@test.com',
     password: 'test',
+  });
+
+  const mockUserToken = new UserToken({
+    id: randomUUID(),
+    user_id: '123',
+    token: randomUUID(),
   });
 
   beforeEach(async () => {
@@ -35,10 +46,19 @@ describe('UsersService', () => {
             remove: jest.fn().mockReturnValue(Promise.resolve(mockUser)),
           },
         },
+        {
+          provide: UserTokenService,
+          useValue: {
+            findByToken: jest
+              .fn()
+              .mockReturnValue(Promise.resolve(mockUserToken)),
+          },
+        },
       ],
     }).compile();
 
     usersService = module.get<UsersService>(UsersService);
+    userTokenService = module.get<UserTokenService>(UserTokenService);
     usersRepository = module.get<Repository<User>>(getRepositoryToken(User));
   });
 
@@ -169,6 +189,59 @@ describe('UsersService', () => {
       jest.spyOn(usersRepository, 'findOneBy').mockReturnValueOnce(null);
 
       expect(usersService.remove(id)).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe("When resetting a user's password", () => {
+    const dataResetPassword: ResetPasswordDto = {
+      password: 'test',
+      confirmPassword: 'test',
+    };
+    it('should be able to reset it', async () => {
+      const reset = await usersService.resetPassword(
+        { token: 'test' },
+        dataResetPassword,
+      );
+      expect(userTokenService.findByToken).toHaveBeenCalled();
+      expect(usersRepository.findOneBy).toHaveBeenCalled();
+      expect(usersRepository.save).toHaveBeenCalled();
+      expect(reset).toBeUndefined();
+    });
+
+    it('should not be able to reset if token is invalid', async () => {
+      jest
+        .spyOn(userTokenService, 'findByToken')
+        .mockReturnValueOnce(Promise.resolve(null));
+
+      expect(
+        usersService.resetPassword({ token: 'test' }, dataResetPassword),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should not be able to reset it if user does not exist', async () => {
+      jest
+        .spyOn(usersRepository, 'findOneBy')
+        .mockReturnValueOnce(Promise.resolve(null));
+
+      expect(
+        usersService.resetPassword({ token: 'test' }, dataResetPassword),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should not be able to reset it if token has been expired', async () => {
+      jest.spyOn(userTokenService, 'findByToken').mockReturnValueOnce(
+        Promise.resolve(
+          new UserToken({
+            id: randomUUID(),
+            user_id: '123',
+            token: randomUUID(),
+            created_at: addHours(Date.now(), -10),
+          }),
+        ),
+      );
+      expect(
+        usersService.resetPassword({ token: 'test' }, dataResetPassword),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 });

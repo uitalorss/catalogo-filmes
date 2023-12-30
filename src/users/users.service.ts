@@ -64,8 +64,10 @@ export class UsersService {
     }
 
     if (email) {
-      const userEmailAlreadyExists = await this.userRepository.findOneBy({
-        email,
+      const userEmailAlreadyExists = await this.userRepository.findOne({
+        where: {
+          email,
+        },
       });
       if (
         userEmailAlreadyExists &&

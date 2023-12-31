@@ -7,6 +7,9 @@ import { Artist } from './entities/artist.entity';
 import { ContentRating } from './entities/contentRating.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CreateFilmDto } from './dto/create-film.dto';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { UpdateFilmDTO } from './dto/update-film.dto';
 
 describe('FilmsService', () => {
   let filmService: FilmsService;
@@ -50,8 +53,8 @@ describe('FilmsService', () => {
           useValue: {
             findOneBy: jest.fn().mockReturnValue(mockFilm),
             create: jest.fn().mockReturnValue(mockFilm),
-            save: jest.fn().mockReturnValue([mockFilm]),
-            find: jest.fn().mockReturnValue(mockFilm),
+            save: jest.fn().mockReturnValue(mockFilm),
+            find: jest.fn().mockReturnValue([mockFilm]),
             findOne: jest.fn().mockReturnValue(mockFilm),
             preload: jest.fn().mockReturnValue(mockFilm),
             remove: jest.fn().mockReturnValue(undefined),
@@ -98,5 +101,144 @@ describe('FilmsService', () => {
     expect(genreRepository).toBeDefined();
     expect(artistRepository).toBeDefined();
     expect(contentRatingRepository).toBeDefined();
+  });
+
+  describe('when creating a film', () => {
+    const createFilmDto: CreateFilmDto = {
+      title: 'test',
+      synopsis: 'test',
+      year: 5,
+      duration: 5,
+      genres: ['test'],
+      artists: ['test'],
+      contentRating: 'Livre',
+    };
+    it('should be able to create it.', async () => {
+      jest
+        .spyOn(filmRepository, 'findOneBy')
+        .mockReturnValueOnce(Promise.resolve(null));
+
+      const newFilm = await filmService.create(createFilmDto);
+
+      expect(filmRepository.findOneBy).toHaveBeenCalled();
+      expect(filmRepository.create).toHaveBeenCalled();
+      expect(filmRepository.save).toHaveBeenCalled();
+      expect(newFilm).toStrictEqual(mockFilm);
+    });
+
+    it('should not be able to do it if film already exists', async () => {
+      expect(filmService.create(createFilmDto)).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+  });
+
+  describe('when listing all films', () => {
+    it('should be able to do it.', async () => {
+      const films = await filmService.findAll();
+
+      expect(filmRepository.find).toHaveBeenCalled();
+      expect(films).toBeInstanceOf(Array<Film>);
+    });
+  });
+
+  describe('when getting a film', () => {
+    it('should be able to do it.', async () => {
+      const film = await filmService.findOne(id);
+
+      expect(filmRepository.findOne).toHaveBeenCalled();
+      expect(film).toStrictEqual(mockFilm);
+    });
+
+    it('should not be able to get it if does not exist', async () => {
+      jest
+        .spyOn(filmRepository, 'findOne')
+        .mockReturnValueOnce(Promise.resolve(null));
+
+      expect(filmService.findOne(id)).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('when updating a film', () => {
+    const updateFilmDto: UpdateFilmDTO = {
+      title: 'test',
+      synopsis: 'test',
+      year: 5,
+      duration: 5,
+      genres: ['test'],
+      artists: ['test'],
+      contentRating: 'Livre',
+    };
+
+    it('should be able to update it.', async () => {
+      const filmToUpdate = await filmService.update(id, updateFilmDto);
+
+      expect(filmRepository.findOneBy).toHaveBeenCalled();
+      expect(filmRepository.preload).toHaveBeenCalled();
+      expect(filmRepository.save).toHaveBeenCalled();
+      expect(filmToUpdate).toBeUndefined();
+    });
+
+    it('should not be able to update it if does not exists', async () => {
+      jest
+        .spyOn(filmRepository, 'findOneBy')
+        .mockReturnValueOnce(Promise.resolve(null));
+
+      expect(filmService.update(id, updateFilmDto)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it('should not be able to update it if his title has already used by another film', async () => {
+      jest.spyOn(filmRepository, 'findOneBy').mockReturnValueOnce(
+        Promise.resolve(
+          new Film({
+            id,
+            title: 'another Test',
+            synopsis: 'test',
+            year: 5,
+            duration: 5,
+            genres: [
+              new Genre({
+                id,
+                description: 'test',
+              }),
+            ],
+            artists: [
+              new Artist({
+                id,
+                name: 'test',
+              }),
+            ],
+            contentRating: new ContentRating({
+              id,
+              description: 'Livre',
+            }),
+          }),
+        ),
+      );
+
+      expect(filmService.update(id, updateFilmDto)).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+  });
+
+  describe('when deleting a film', () => {
+    it('should be able to delete it.', async () => {
+      const filmToDelete = await filmService.remove(id);
+
+      expect(filmRepository.findOneBy).toHaveBeenCalled();
+      expect(filmRepository.remove).toHaveBeenCalled();
+      expect(filmToDelete).toBeUndefined();
+    });
+
+    it('should not be able to delete it if does not exist', async () => {
+      jest
+        .spyOn(filmRepository, 'findOneBy')
+        .mockReturnValueOnce(Promise.resolve(null));
+
+      expect(filmService.remove(id)).rejects.toThrow(NotFoundException);
+    });
   });
 });

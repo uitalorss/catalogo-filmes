@@ -94,11 +94,12 @@ export class FilmsService {
   }
 
   public async update(id: string, updateFilmDto: UpdateFilmDTO) {
-    const filmAlreadyExists = await this.filmRepository.findOneBy({ id });
+    const { title } = updateFilmDto;
+    const filmAlreadyExists = await this.filmRepository.findOneBy({ title });
     if (!filmAlreadyExists) {
       throw new NotFoundException('Filme não encontrado');
     }
-    if (filmAlreadyExists && filmAlreadyExists.id !== id) {
+    if (filmAlreadyExists && filmAlreadyExists.title !== updateFilmDto.title) {
       throw new BadRequestException('Nome do filme já incluso na lista');
     }
     const genresList =

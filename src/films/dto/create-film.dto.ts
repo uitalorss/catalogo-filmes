@@ -1,22 +1,5 @@
 import { z } from 'zod';
 
-// export class CreateFilmDto {
-//   @IsString()
-//   title: string;
-//   @IsString()
-//   synopsis: string;
-//   @IsNumber()
-//   year: number;
-//   @IsNumber()
-//   duration: number;
-//   @IsArray()
-//   genres: string[];
-//   @IsArray()
-//   artists: string[];
-//   @IsString()
-//   contentRating: 'Livre | "+12" | "+14" | "+16" | "+18"';
-// }
-
 export const createFilmSchema = z.object({
   title: z
     .string({ required_error: 'Campo título é obrigatório' })

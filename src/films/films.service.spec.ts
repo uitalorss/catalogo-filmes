@@ -117,7 +117,6 @@ describe('FilmsService', () => {
       jest
         .spyOn(filmRepository, 'findOneBy')
         .mockReturnValueOnce(Promise.resolve(null));
-
       const newFilm = await filmService.create(createFilmDto);
 
       expect(filmRepository.findOneBy).toHaveBeenCalled();
@@ -126,7 +125,53 @@ describe('FilmsService', () => {
       expect(newFilm).toStrictEqual(mockFilm);
     });
 
+    it('should be able to create a genre if does not exists', async () => {
+      jest
+        .spyOn(filmRepository, 'findOneBy')
+        .mockReturnValueOnce(Promise.resolve(null));
+      jest
+        .spyOn(genreRepository, 'findOneBy')
+        .mockReturnValueOnce(Promise.resolve(null));
+
+      const newFilm = await filmService.create(createFilmDto);
+
+      expect(genreRepository.create).toHaveBeenCalled();
+      expect(newFilm.genres[0]).toStrictEqual(mockFilm.genres[0]);
+    });
+
+    it('should be able to create an artist if does not exists', async () => {
+      jest
+        .spyOn(filmRepository, 'findOneBy')
+        .mockReturnValueOnce(Promise.resolve(null));
+      jest
+        .spyOn(artistRepository, 'findOneBy')
+        .mockReturnValueOnce(Promise.resolve(null));
+
+      const newFilm = await filmService.create(createFilmDto);
+
+      expect(artistRepository.create).toHaveBeenCalled();
+      expect(newFilm.artists[0]).toStrictEqual(mockFilm.artists[0]);
+    });
+
+    it('should be able to create a content rating if does not exists', async () => {
+      jest
+        .spyOn(filmRepository, 'findOneBy')
+        .mockReturnValueOnce(Promise.resolve(null));
+      jest
+        .spyOn(contentRatingRepository, 'findOneBy')
+        .mockReturnValueOnce(Promise.resolve(null));
+
+      const newFilm = await filmService.create(createFilmDto);
+
+      expect(contentRatingRepository.create).toHaveBeenCalled();
+      expect(newFilm.contentRating).toStrictEqual(mockFilm.contentRating);
+    });
+
     it('should not be able to do it if film already exists', async () => {
+      jest
+        .spyOn(filmRepository, 'findOneBy')
+        .mockReturnValueOnce(Promise.resolve(mockFilm));
+
       expect(filmService.create(createFilmDto)).rejects.toThrow(
         BadRequestException,
       );

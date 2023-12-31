@@ -11,4 +11,10 @@ export class ContentRating {
   description: string;
   @OneToMany(() => Film, (film) => film.contentRating)
   films: Film[];
+
+  constructor(contentRating: Partial<ContentRating>) {
+    this.id = contentRating?.id;
+    this.description = contentRating?.description;
+    this.films = contentRating?.films;
+  }
 }

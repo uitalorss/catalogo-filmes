@@ -53,4 +53,17 @@ export class Film {
 
   @UpdateDateColumn({ type: 'timestamptz' })
   updated_at: Date;
+
+  constructor(film: Partial<Film>) {
+    this.id = film?.id;
+    this.title = film?.title;
+    this.synopsis = film?.synopsis;
+    this.year = film?.year;
+    this.duration = film?.duration;
+    this.genres = film?.genres;
+    this.artists = film?.artists;
+    this.contentRating = film?.contentRating;
+    this.created_at = film?.created_at;
+    this.updated_at = film?.updated_at;
+  }
 }

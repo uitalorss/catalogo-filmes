@@ -11,4 +11,10 @@ export class Genre {
   description: string;
   @ManyToMany(() => Film, (film) => film.genres)
   films: Film[];
+
+  constructor(genre: Partial<Genre>) {
+    this.id = genre?.id;
+    this.description = genre?.description;
+    this.films = genre?.films;
+  }
 }

@@ -11,4 +11,10 @@ export class Artist {
   name: string;
   @ManyToMany(() => Film, (film) => film.artists)
   films: Film[];
+
+  constructor(artist: Partial<Artist>) {
+    this.id = artist?.id;
+    this.name = artist?.name;
+    this.films = artist?.films;
+  }
 }

@@ -1,4 +1,4 @@
-import * as dotenv from 'dotenv';
+import 'dotenv/config';
 
 import { Artist } from 'src/films/entities/artist.entity';
 import { ContentRating } from 'src/films/entities/contentRating.entity';
@@ -7,7 +7,6 @@ import { Genre } from 'src/films/entities/genre.entity';
 import { UserToken } from 'src/user-token/entities/userToken.entity';
 import { User } from 'src/users/entities/user.entity';
 import { DataSource, DataSourceOptions } from 'typeorm';
-dotenv.config();
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',

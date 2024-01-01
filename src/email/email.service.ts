@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { MailerService } from '@nestjs-modules/mailer';
 import {
   BadRequestException,
@@ -5,10 +6,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
-import * as dotenv from 'dotenv';
 import { SendMailForgotPasswordDto } from './dto/send-mail-dto';
 import { UserTokenService } from 'src/user-token/user-token.service';
-dotenv.config();
 
 @Injectable()
 export class EmailService {

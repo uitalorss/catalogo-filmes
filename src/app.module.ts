@@ -9,7 +9,7 @@ import { UserTokenModule } from './user-token/user-token.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     UsersModule,
     DatabaseModule,
     FilmsModule,

@@ -1,12 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { ExecutionContext, INestApplication } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { UsersModule } from './users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataSource, DataSourceOptions } from 'typeorm';
+import { DataSource, DataSourceOptions, Repository } from 'typeorm';
 import request from 'supertest';
 import { AuthModule } from '../auth/auth.module';
+import { authGuard } from '../auth/auth.guard';
 
 describe('UsersController', () => {
   let app: INestApplication;
@@ -26,7 +27,7 @@ describe('UsersController', () => {
     entities: [User],
   };
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     module = await Test.createTestingModule({
       imports: [
         UsersModule,
@@ -37,7 +38,16 @@ describe('UsersController', () => {
           },
         }),
       ],
-    }).compile();
+    })
+      .overrideGuard(authGuard)
+      .useValue({
+        canActivate: (context: ExecutionContext) => {
+          const req = context.switchToHttp().getRequest();
+          req.user = users[0].id;
+          return true;
+        },
+      })
+      .compile();
 
     app = module.createNestApplication();
     createUserDto = {
@@ -67,8 +77,15 @@ describe('UsersController', () => {
         .send(createUserDto)
         .expect(201);
 
-      console.log(res.body);
       expect(res.body).toBeDefined();
+    });
+  });
+
+  describe('GET /users', () => {
+    it('should be able to list a user', async () => {
+      const res = await request(app.getHttpServer()).get('/users').expect(200);
+
+      expect(res.body.id).toStrictEqual(users[0].id);
     });
   });
 });

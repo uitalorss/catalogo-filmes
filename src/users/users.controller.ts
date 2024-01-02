@@ -17,7 +17,7 @@ import { CreateUserDto, createUserSchema } from './dto/create-user.dto';
 import { UpdateUserDto, partialUserSchema } from './dto/update-user.dto';
 import { ZodValidationPipe } from './helpers/ZodValidationPipe';
 import { instanceToInstance } from 'class-transformer';
-import { authGuard } from 'src/auth/auth.guard';
+import { authGuard } from '../auth/auth.guard';
 import {
   ResetPasswordDto,
   resetPasswordSchema,

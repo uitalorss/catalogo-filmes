@@ -8,11 +8,11 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import * as bcrypt from 'bcrypt';
 import { addHours, isAfter } from 'date-fns';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { queryTokenDto } from './dto/query-token.dto';
 import { UserTokenService } from '../user-token/user-token.service';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -30,7 +30,7 @@ export class UsersService {
       throw new BadRequestException('Usuário com email já cadastrado');
     }
 
-    const hashedPassword = await bcrypt.hash(password, 8);
+    const hashedPassword = await hash(password, 8);
 
     const user = this.userRepository.create({
       name,
@@ -79,7 +79,7 @@ export class UsersService {
     }
 
     if (password) {
-      const hashedPassword = await bcrypt.hash(password, 8);
+      const hashedPassword = await hash(password, 8);
       user.password = hashedPassword;
     }
 
@@ -118,7 +118,7 @@ export class UsersService {
     if (isAfter(Date.now(), compareDate)) {
       throw new BadRequestException('Token expirado.');
     }
-    const hashedPassword = await bcrypt.hash(resetPasswordDto.password, 8);
+    const hashedPassword = await hash(resetPasswordDto.password, 8);
     user.password = hashedPassword;
     await this.userRepository.save(user);
   }

@@ -14,7 +14,6 @@ describe('AuthService', () => {
   let authService: AuthService;
   let usersService: UsersService;
   let jwtService: JwtService;
-  let bcryptCompare: jest.Mock;
   const id = randomUUID();
 
   const mockUser = new User({
@@ -58,13 +57,15 @@ describe('AuthService', () => {
       password: 'test',
     };
     it('should be able to do it', async () => {
-      bcryptCompare = jest.fn().mockReturnValueOnce(true);
-      (bcrypt.compare as jest.Mock) = bcryptCompare;
+      const bcryptCompareSpy = jest
+        .spyOn(bcrypt, 'compare')
+        .mockImplementation(() => Promise.resolve(true));
       const authenticate = await authService.login(authenticateUser);
 
       expect(usersService.findByEmail).toHaveBeenCalled();
       expect(jwtService.signAsync).toHaveBeenCalled();
       expect(authenticate).toHaveProperty('token');
+      bcryptCompareSpy.mockRestore();
     });
 
     it('should not be able to authenticate if email is wrong', async () => {
@@ -78,12 +79,14 @@ describe('AuthService', () => {
     });
 
     it("should not be able to authenticate if password doesn't match", async () => {
-      bcryptCompare = jest.fn().mockReturnValueOnce(false);
-      (bcrypt.compare as jest.Mock) = bcryptCompare;
+      const bcryptCompareSpy = jest
+        .spyOn(bcrypt, 'compare')
+        .mockImplementation(() => Promise.resolve(false));
 
       expect(
         authService.login({ email: 'test@test.com', password: 'test' }),
       ).rejects.toThrow(UnauthorizedException);
+      bcryptCompareSpy.mockRestore();
     });
   });
 });

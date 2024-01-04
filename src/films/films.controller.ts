@@ -13,9 +13,9 @@ import {
 import { FilmsService } from './films.service';
 import { CreateFilmDto, createFilmSchema } from './dto/create-film.dto';
 import { instanceToInstance } from 'class-transformer';
-import { ZodValidationPipe } from 'src/users/helpers/ZodValidationPipe';
+import { ZodValidationPipe } from '../users/helpers/ZodValidationPipe';
 import { UpdateFilmDTO, partialFilmSchema } from './dto/update-film.dto';
-import { authGuard } from 'src/auth/auth.guard';
+import { authGuard } from '../auth/auth.guard';
 
 @Controller('films')
 export class FilmsController {

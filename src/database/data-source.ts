@@ -19,6 +19,17 @@ export const dataSourceOptions: DataSourceOptions = {
   entities: [User, Film, Artist, Genre, ContentRating, UserToken],
 };
 
+export const dataSourceTest: DataSourceOptions = {
+  type: 'postgres',
+  host: 'localhost',
+  port: Number(5429),
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+  synchronize: true,
+  entities: [User, Film, Artist, Genre, ContentRating, UserToken],
+};
+
 export const dataSource = new DataSource({
   ...dataSourceOptions,
   synchronize: false,

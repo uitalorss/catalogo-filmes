@@ -3,8 +3,8 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { Module } from '@nestjs/common';
 import { EmailController } from './email.controller';
 import { EmailService } from './email.service';
-import { UsersModule } from 'src/users/users.module';
-import { UserTokenModule } from 'src/user-token/user-token.module';
+import { UsersModule } from '../users/users.module';
+import { UserTokenModule } from '../user-token/user-token.module';
 
 @Module({
   imports: [

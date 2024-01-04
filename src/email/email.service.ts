@@ -5,9 +5,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { SendMailForgotPasswordDto } from './dto/send-mail-dto';
-import { UserTokenService } from 'src/user-token/user-token.service';
+import { UserTokenService } from '../user-token/user-token.service';
 
 @Injectable()
 export class EmailService {
@@ -19,6 +19,7 @@ export class EmailService {
 
   public async sendMail({ email }: SendMailForgotPasswordDto) {
     const user = await this.usersService.findByEmail(email);
+    console.log(user);
     if (!user) {
       throw new NotFoundException('Usuário não encontrado.');
     }

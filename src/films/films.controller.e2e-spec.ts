@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceTest } from '../database/data-source';
 import { DataSource } from 'typeorm';
 import request from 'supertest';
+import { UpdateFilmDTO } from './dto/update-film.dto';
 
 describe('FilmsController', () => {
   let app: INestApplication;
@@ -66,6 +67,8 @@ describe('FilmsController', () => {
         .post('/films')
         .send(createFilmDto)
         .expect(201);
+
+      expect(res.body).toHaveProperty('id');
     });
   });
 
@@ -74,6 +77,47 @@ describe('FilmsController', () => {
       const res = await request(app.getHttpServer()).get('/films').expect(200);
 
       expect(res.body).toBeInstanceOf(Array<Film>);
+    });
+  });
+
+  describe('GET /films/:id', () => {
+    it('should be able to get a film by id.', async () => {
+      const res = await request(app.getHttpServer())
+        .get(`/films/${films[0].id}`)
+        .send()
+        .expect(200);
+
+      expect(res.body).toHaveProperty('id');
+    });
+  });
+
+  describe('PUT /films/:id', () => {
+    const updateFilmDto: UpdateFilmDTO = {
+      title: 'test',
+      synopsis: 'another test',
+      year: 1909,
+      duration: 5,
+      genres: ['another test'],
+      artists: ['another test'],
+      contentRating: 'Livre',
+    };
+    it('should be able to update a film by id.', async () => {
+      const res = await request(app.getHttpServer())
+        .put(`/films/${films[0].id}`)
+        .send(updateFilmDto)
+        .expect(204);
+
+      expect(res.body).toBeTruthy();
+    });
+  });
+
+  describe('DELETE /films/:id', () => {
+    it('should be able to delete a film by id.', async () => {
+      const res = await request(app.getHttpServer())
+        .del(`/films/${films[0].id}`)
+        .expect(204);
+
+      expect(res.body).toBeTruthy();
     });
   });
 });

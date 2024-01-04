@@ -4,7 +4,7 @@ import {
   SendMailForgotPasswordDto,
   sendMailForgotPasswordSchema,
 } from './dto/send-mail-dto';
-import { ZodValidationPipe } from 'src/users/helpers/ZodValidationPipe';
+import { ZodValidationPipe } from '../users/helpers/ZodValidationPipe';
 
 @Controller('email')
 export class EmailController {

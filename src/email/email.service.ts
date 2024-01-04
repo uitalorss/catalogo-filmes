@@ -19,7 +19,7 @@ export class EmailService {
 
   public async sendMail({ email }: SendMailForgotPasswordDto) {
     const user = await this.usersService.findByEmail(email);
-    console.log(user);
+
     if (!user) {
       throw new NotFoundException('Usuário não encontrado.');
     }

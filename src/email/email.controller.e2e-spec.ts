@@ -8,6 +8,9 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AuthModule } from '../auth/auth.module';
 import { dataSourceTest } from '../database/data-source';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { EmailModule } from './email.module';
 
 describe('UsersController', () => {
   let app: INestApplication;
@@ -19,9 +22,30 @@ describe('UsersController', () => {
         UserTokenModule,
         UsersModule,
         AuthModule,
+        EmailModule,
         TypeOrmModule.forRootAsync({
           useFactory: async () => {
             return dataSourceTest;
+          },
+        }),
+        MailerModule.forRoot({
+          transport: {
+            host: String(process.env.MAIL_HOST),
+            port: Number(process.env.MAIL_PORT),
+            auth: {
+              user: process.env.MAIL_USER,
+              pass: process.env.MAIL_PASS,
+            },
+          },
+          defaults: {
+            from: `${process.env.MAIL_FROM} <${process.env.MAIL_FROM}>`,
+          },
+          template: {
+            dir: process.cwd() + '/src/templates/',
+            adapter: new HandlebarsAdapter(),
+            options: {
+              strict: true,
+            },
           },
         }),
       ],
@@ -48,9 +72,7 @@ describe('UsersController', () => {
         .send({ email: 'test@test.com' })
         .expect(201);
 
-      console.log(res.body);
-
-      expect(res.status).toBe(201);
+      console.log(res.status);
     });
   });
 });

@@ -8,14 +8,12 @@ import {
   Res,
   HttpCode,
   Put,
-  UseGuards,
 } from '@nestjs/common';
 import { FilmsService } from './films.service';
 import { CreateFilmDto, createFilmSchema } from './dto/create-film.dto';
 import { instanceToInstance } from 'class-transformer';
-import { ZodValidationPipe } from 'src/users/helpers/ZodValidationPipe';
+import { ZodValidationPipe } from '../users/helpers/ZodValidationPipe';
 import { UpdateFilmDTO, partialFilmSchema } from './dto/update-film.dto';
-import { authGuard } from 'src/auth/auth.guard';
 
 @Controller('films')
 export class FilmsController {
@@ -38,7 +36,6 @@ export class FilmsController {
     return res.json(instanceToInstance(films));
   }
 
-  @UseGuards(authGuard)
   @Get(':id')
   public async findOne(@Res() res, @Param('id') id: string) {
     const film = await this.filmsService.findOne(id);

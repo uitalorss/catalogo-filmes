@@ -55,6 +55,8 @@ describe('FilmsController', () => {
   });
 
   afterAll(async () => {
+    const dataSource = app.get(DataSource);
+    await dataSource.createQueryBuilder().delete().from(Film).execute();
     await module.close();
   });
 

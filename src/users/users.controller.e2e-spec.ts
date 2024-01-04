@@ -63,6 +63,8 @@ describe('UsersController', () => {
   });
 
   afterAll(async () => {
+    const dataSource = app.get(DataSource);
+    await dataSource.createQueryBuilder().delete().from(User).execute();
     await module.close();
   });
 

@@ -2,8 +2,8 @@
 
 <!---Esses são exemplos. Veja https://shields.io para outras pessoas ou para personalizar este conjunto de escudos. Você pode querer incluir dependências, status do projeto e informações de licença aqui--->
 
-![GitHub repo size](https://img.shields.io/github/repo-size/uitalorss/desafio-backend-modulo-03-sistema-dindin?style=for-the-badge)
-![GitHub language count](https://img.shields.io/github/languages/count/uitalorss/desafio-backend-modulo-03-sistema-dindin?style=for-the-badge)
+![GitHub repo size](https://img.shields.io/github/repo-size/uitalorss/catalogo-filmes?style=for-the-badge)
+![GitHub language count](https://img.shields.io/github/languages/count/uitalorss/catalogo-filmes?style=for-the-badge)
 
 ### 💡 Um pouco sobre o projeto.
 

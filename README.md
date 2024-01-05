@@ -65,27 +65,17 @@ Caso tenha o Docker e o docker compose instalado na máquina, basta utilizar o c
 
 ## ✅ Requisitos funcionais
 
-[x] É possível cadastrar um usuário.
-
-[x] É possível fazer login na aplicação.
-
-[x] É possível atualizar os dados de usuário.
-
-[x] É possível solicitar o envio de email para redefinição de senha.
-
-[x] É possíve redefinir a senha de usuário.
-
-[x] É possível cadastrar filmes.
-
-[x] É possível listar filmes.
-
-[x] É possível listar um filme de acordo com o seu id.
-
-[x] É possível pesquisar filmes por gênero, artistas ou classificação indicativa.
-
-[x] É possível atualizar informações de um filme.
-
-[x] É possível excluir um filme.
+- [x] É possível cadastrar um usuário.
+- [x] É possível fazer login na aplicação.
+- [x] É possível atualizar os dados de usuário.
+- [x] É possível solicitar o envio de email para redefinição de senha.
+- [x] É possíve redefinir a senha de usuário.
+- [x] É possível cadastrar filmes.
+- [x] É possível listar filmes.
+- [x] É possível listar um filme de acordo com o seu id.
+- [ ] É possível pesquisar filmes por gênero, artistas ou classificação indicativa.
+- [x] É possível atualizar informações de um filme.
+- [x] É possível excluir um filme.
 
 ## 📫 Contribuindo para Catálogo de filmes
 

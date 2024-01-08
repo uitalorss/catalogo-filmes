@@ -11,6 +11,7 @@ import { Artist } from './entities/artist.entity';
 import { Genre } from './entities/genre.entity';
 import { ContentRating } from './entities/contentRating.entity';
 import { UpdateFilmDTO } from './dto/update-film.dto';
+import { searchQueryDto } from './dto/search-query.dto';
 // import { UpdateFilmDto } from './dto/update-film.dto';
 
 @Injectable()
@@ -65,14 +66,29 @@ export class FilmsService {
     return film;
   }
 
-  public async findAll() {
-    const films = await this.filmRepository.find({
-      relations: {
-        artists: true,
-        genres: true,
-        contentRating: true,
-      },
-    });
+  public async findAll(query?: searchQueryDto) {
+    console.log(query);
+    if (Object.keys(query).length === 0) {
+      const films = await this.filmRepository.find({
+        relations: {
+          artists: true,
+          genres: true,
+          contentRating: true,
+        },
+      });
+      return films;
+    }
+
+    const films = await this.filmRepository
+      .createQueryBuilder('films')
+      .leftJoin('films.genres', 'genre')
+      .leftJoin('films.artists', 'artist')
+      .leftJoinAndSelect('films.genres', query.genre)
+      .leftJoinAndSelect('films.artists', query.artist)
+      .where('genre.description = :description', { description: query.genre })
+      .andWhere('artist.name = :name', { name: query.artist })
+      .getMany();
+
     return films;
   }
 

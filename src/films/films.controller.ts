@@ -8,12 +8,14 @@ import {
   Res,
   HttpCode,
   Put,
+  Query,
 } from '@nestjs/common';
 import { FilmsService } from './films.service';
 import { CreateFilmDto, createFilmSchema } from './dto/create-film.dto';
 import { instanceToInstance } from 'class-transformer';
 import { ZodValidationPipe } from '../users/helpers/ZodValidationPipe';
 import { UpdateFilmDTO, partialFilmSchema } from './dto/update-film.dto';
+import { searchQueryDto, searchQuerySchema } from './dto/search-query.dto';
 
 @Controller('films')
 export class FilmsController {
@@ -30,8 +32,11 @@ export class FilmsController {
   }
 
   @Get()
-  public async findAll(@Res() res) {
-    const films = await this.filmsService.findAll();
+  public async findAll(
+    @Query(new ZodValidationPipe(searchQuerySchema)) query: searchQueryDto,
+    @Res() res,
+  ) {
+    const films = await this.filmsService.findAll(query);
 
     return res.json(instanceToInstance(films));
   }

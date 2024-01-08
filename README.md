@@ -27,7 +27,7 @@ O projeto ainda está em desenvolvimento e as próximas atualizações serão vo
 - TypeORM
 - JEST
 
-## 🚀 Instalando o Catalogo de filmes
+## 🚀 Instalando o Catálogo de filmes
 
 Para instalar o projeto, instale as dependências usando o comando abaxo:
 
@@ -43,7 +43,7 @@ yarn:
 yarn install
 ```
 
-## ☕ Usando Catalogo de filmes
+## ☕ Usando Catálogo de filmes
 
 Para usar a aplicação, siga estas etapas:
 

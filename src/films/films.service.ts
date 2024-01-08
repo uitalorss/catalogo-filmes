@@ -67,7 +67,6 @@ export class FilmsService {
   }
 
   public async findAll(query?: searchQueryDto) {
-    console.log(query);
     if (Object.keys(query).length === 0) {
       const films = await this.filmRepository.find({
         relations: {
@@ -79,15 +78,35 @@ export class FilmsService {
       return films;
     }
 
-    const films = await this.filmRepository
+    let queryBuilder = this.filmRepository
       .createQueryBuilder('films')
       .leftJoin('films.genres', 'genre')
-      .leftJoin('films.artists', 'artist')
-      .leftJoinAndSelect('films.genres', query.genre)
-      .leftJoinAndSelect('films.artists', query.artist)
-      .where('genre.description = :description', { description: query.genre })
-      .andWhere('artist.name = :name', { name: query.artist })
-      .getMany();
+      .leftJoin('films.artists', 'artist');
+    if (query.genre) {
+      queryBuilder = queryBuilder
+        .leftJoinAndSelect('films.genres', query.genre)
+        .where('genre.description = :description', {
+          description: query.genre,
+        });
+    }
+
+    if (query.artist) {
+      queryBuilder = queryBuilder
+        .leftJoinAndSelect('films.artists', query.artist)
+        .andWhere('artist.name = :name', { name: query.artist });
+    }
+
+    // const films = await this.filmRepository
+    // .createQueryBuilder('films')
+    // .leftJoin('films.genres', 'genre')
+    // .leftJoinAndSelect('films.genres', query.genre)
+    // .where('genre.description = :description', { description: query.genre })
+    // .leftJoin('films.artists', 'artist')
+    // .leftJoinAndSelect('films.artists', query.artist)
+    // .andWhere('artist.name = :name', { name: query.artist })
+    // .getMany();
+
+    const films = await queryBuilder.getMany();
 
     return films;
   }

@@ -81,7 +81,9 @@ export class FilmsService {
     let queryBuilder = this.filmRepository
       .createQueryBuilder('films')
       .leftJoin('films.genres', 'genre')
-      .leftJoin('films.artists', 'artist');
+      .leftJoin('films.artists', 'artist')
+      .leftJoinAndSelect('films.genres', 'genres')
+      .leftJoinAndSelect('films.artists', 'artists');
     if (query.genre) {
       queryBuilder = queryBuilder
         .leftJoinAndSelect('films.genres', query.genre)

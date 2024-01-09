@@ -11,5 +11,6 @@ import { Artist } from './entities/artist.entity';
   imports: [TypeOrmModule.forFeature([Film, Genre, Artist, ContentRating])],
   controllers: [FilmsController],
   providers: [FilmsService],
+  exports: [FilmsService],
 })
 export class FilmsModule {}

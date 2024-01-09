@@ -6,12 +6,14 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Genre } from './genre.entity';
 import { Artist } from './artist.entity';
 import { ContentRating } from './contentRating.entity';
+import { Evaluation } from 'src/evaluation/entities/evaluation.entity';
 
 @Entity('films')
 export class Film {
@@ -47,6 +49,9 @@ export class Film {
   })
   @JoinColumn({ name: 'ContentRating_id' })
   contentRating: ContentRating;
+
+  @OneToMany(() => Evaluation, (evaluation) => evaluation.film)
+  evaluations: Evaluation[];
 
   @CreateDateColumn({ type: 'timestamptz' })
   created_at: Date;

@@ -1,8 +1,10 @@
 import { Exclude } from 'class-transformer';
+import { Evaluation } from 'src/evaluation/entities/evaluation.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -18,6 +20,8 @@ export class User {
   @Column({ type: 'text' })
   @Exclude()
   password: string;
+  @OneToMany(() => Evaluation, (evaluation) => evaluation.user)
+  evaluations: Evaluation[];
   @CreateDateColumn({ type: 'timestamptz' })
   created_at: Date;
   @UpdateDateColumn({ type: 'timestamptz' })

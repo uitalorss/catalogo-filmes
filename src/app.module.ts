@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { EmailModule } from './email/email.module';
 import { UserTokenModule } from './user-token/user-token.module';
+import { EvaluationModule } from './evaluation/evaluation.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { UserTokenModule } from './user-token/user-token.module';
     AuthModule,
     EmailModule,
     UserTokenModule,
+    EvaluationModule,
   ],
   controllers: [],
   providers: [],

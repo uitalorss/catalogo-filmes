@@ -7,6 +7,7 @@ import { Genre } from '../films/entities/genre.entity';
 import { UserToken } from '../user-token/entities/userToken.entity';
 import { User } from '../users/entities/user.entity';
 import { DataSource, DataSourceOptions } from 'typeorm';
+import { Evaluation } from 'src/evaluation/entities/evaluation.entity';
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
@@ -16,7 +17,7 @@ export const dataSourceOptions: DataSourceOptions = {
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
   synchronize: false,
-  entities: [User, Film, Artist, Genre, ContentRating, UserToken],
+  entities: [User, Film, Artist, Genre, ContentRating, UserToken, Evaluation],
 };
 
 export const dataSourceTest: DataSourceOptions = {

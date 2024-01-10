@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
 import { FilmsService } from 'src/films/films.service';
 import { createEvaluationDto } from './dto/create-evaluation.dto';
+import { deleteEvaluationDto } from './dto/delete-evaluation.dto';
 
 @Injectable()
 export class EvaluationService {
@@ -58,12 +59,22 @@ export class EvaluationService {
     return await this.evaluationRepository.save(evaluation);
   }
 
-  public async delete(id_evaluation: string) {
-    const evaluation = await this.evaluationRepository.findOneBy({
-      id: id_evaluation,
+  public async delete({ evaluation_id, user_id }: deleteEvaluationDto) {
+    console.log(user_id);
+    const evaluation = await this.evaluationRepository.findOne({
+      where: { id: evaluation_id },
+      relations: {
+        user: true,
+      },
     });
     if (!evaluation) {
       throw new NotFoundException({ message: 'Avaliação não existe' });
+    }
+
+    if (evaluation.user.id !== user_id) {
+      throw new BadRequestException(
+        'Você não pode apagar um comentário que nao é seu.',
+      );
     }
 
     await this.evaluationRepository.remove(evaluation);

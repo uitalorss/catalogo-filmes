@@ -1,4 +1,13 @@
-import { Body, Controller, Param, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpCode,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { EvaluationService } from './evaluation.service';
 import { CreateEvaluationRequest } from './dto/create-evaluation.dto';
 import { authGuard } from 'src/auth/auth.guard';
@@ -22,5 +31,15 @@ export class EvaluationController {
       user_id: req.user,
     });
     return evaluation;
+  }
+
+  @Delete(':id')
+  @UseGuards(authGuard)
+  @HttpCode(204)
+  public async delete(@Req() req, @Param('id') id: string) {
+    return await this.evaluationService.delete({
+      user_id: req.user,
+      evaluation_id: id,
+    });
   }
 }

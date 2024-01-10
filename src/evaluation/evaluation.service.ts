@@ -66,15 +66,6 @@ export class EvaluationService {
     user_id,
     evaluation_id,
   }: updateEvaluationDto) {
-    // const evaluation = await this.evaluationRepository.findOne({
-    //   where: { id: evaluation_id },
-    //   relations: { user: true },
-    // });
-    // if (!evaluation) {
-    //   throw new NotFoundException({ message: 'Avaliação não existe' });
-    // }
-
-    // }
     const evaluation = await this.evaluationRepository.preload({
       id: evaluation_id,
       user: {

@@ -73,6 +73,7 @@ export class FilmsService {
           artists: true,
           genres: true,
           contentRating: true,
+          evaluations: true,
         },
       });
       return films;

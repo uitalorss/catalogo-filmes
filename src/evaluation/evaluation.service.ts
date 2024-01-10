@@ -28,31 +28,25 @@ export class EvaluationService {
     const film = await this.filmsService.findOne(film_id);
     const user = await this.usersService.findOne(user_id);
 
-    // const evaluationAlreadyExists = await this.evaluationRepository.findOne({
-    //   where: [
-    //     {
-    //       user: {
-    //         id: user.id,
-    //       },
-    //     },
-    //     {
-    //       film: {
-    //         id: film.id,
-    //       },
-    //     },
-    //   ],
-    //   relations: {
-    //     film: true,
-    //     user: true,
-    //   },
-    // });
-    // console.log(evaluationAlreadyExists);
-
-    // if (evaluationAlreadyExists) {
-    //   throw new BadRequestException({
-    //     message: 'Você já atribuiu uma nota para esse filme',
-    //   });
-    // }
+    const evaluationAlreadyExists = await this.evaluationRepository.findOne({
+      where: {
+        user: {
+          id: user.id,
+        },
+        film: {
+          id: film.id,
+        },
+      },
+      relations: {
+        film: true,
+        user: true,
+      },
+    });
+    if (evaluationAlreadyExists) {
+      throw new BadRequestException({
+        message: 'Você já atribuiu uma nota para esse filme',
+      });
+    }
 
     const evaluation = this.evaluationRepository.create({
       rating,

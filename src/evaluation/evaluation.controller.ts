@@ -15,7 +15,6 @@ export class EvaluationController {
     createEvaluationRequest: CreateEvaluationRequest,
     @Param('id') id: string,
   ) {
-    console.log(id);
     const evaluation = await this.evaluationService.create({
       comment: createEvaluationRequest.comment,
       rating: createEvaluationRequest.rating,

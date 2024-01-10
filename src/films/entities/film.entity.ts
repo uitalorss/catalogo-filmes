@@ -13,7 +13,7 @@ import {
 import { Genre } from './genre.entity';
 import { Artist } from './artist.entity';
 import { ContentRating } from './contentRating.entity';
-import { Evaluation } from 'src/evaluation/entities/evaluation.entity';
+import { Evaluation } from '../../evaluation/entities/evaluation.entity';
 
 @Entity('films')
 export class Film {

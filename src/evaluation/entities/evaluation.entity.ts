@@ -1,5 +1,5 @@
-import { Film } from 'src/films/entities/film.entity';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
+import { Film } from '../../films/entities/film.entity';
 import {
   Column,
   CreateDateColumn,
@@ -32,4 +32,12 @@ export class Evaluation {
   created_at: Date;
   @UpdateDateColumn({ type: 'timestamptz' })
   updated_at: Date;
+
+  constructor(evaluation: Partial<Evaluation>) {
+    this.id = evaluation?.id;
+    this.rating = evaluation?.rating;
+    this.comment = evaluation?.comment;
+    this.film = evaluation?.film;
+    this.user = evaluation?.user;
+  }
 }

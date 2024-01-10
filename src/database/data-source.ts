@@ -7,7 +7,7 @@ import { Genre } from '../films/entities/genre.entity';
 import { UserToken } from '../user-token/entities/userToken.entity';
 import { User } from '../users/entities/user.entity';
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { Evaluation } from 'src/evaluation/entities/evaluation.entity';
+import { Evaluation } from '../evaluation/entities/evaluation.entity';
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',

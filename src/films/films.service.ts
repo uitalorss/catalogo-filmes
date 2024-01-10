@@ -12,7 +12,6 @@ import { Genre } from './entities/genre.entity';
 import { ContentRating } from './entities/contentRating.entity';
 import { UpdateFilmDTO } from './dto/update-film.dto';
 import { searchQueryDto } from './dto/search-query.dto';
-// import { UpdateFilmDto } from './dto/update-film.dto';
 
 @Injectable()
 export class FilmsService {

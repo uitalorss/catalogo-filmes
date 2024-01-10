@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { EvaluationService } from './evaluation.service';
 import { CreateEvaluationRequest } from './dto/create-evaluation.dto';
-import { authGuard } from 'src/auth/auth.guard';
+import { authGuard } from '../auth/auth.guard';
 import { updateEvaluationDto } from './dto/update-evaluation.dto';
 
 @Controller('films/evaluation')

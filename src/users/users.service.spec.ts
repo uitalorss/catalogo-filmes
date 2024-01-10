@@ -12,24 +12,24 @@ import { UserToken } from '../user-token/entities/userToken.entity';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { addHours } from 'date-fns';
 
+const id = randomUUID();
+export const mockUser = new User({
+  id,
+  name: 'test',
+  email: 'test@test.com',
+  password: 'test',
+});
+
+const mockUserToken = new UserToken({
+  id: randomUUID(),
+  user_id: '123',
+  token: randomUUID(),
+});
+
 describe('UsersService', () => {
   let usersService: UsersService;
   let userTokenService: UserTokenService;
   let usersRepository: Repository<User>;
-  const id = randomUUID();
-
-  const mockUser = new User({
-    id,
-    name: 'test',
-    email: 'test@test.com',
-    password: 'test',
-  });
-
-  const mockUserToken = new UserToken({
-    id: randomUUID(),
-    user_id: '123',
-    token: randomUUID(),
-  });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

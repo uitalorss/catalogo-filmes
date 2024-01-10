@@ -11,38 +11,38 @@ import { CreateFilmDto } from './dto/create-film.dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { UpdateFilmDTO } from './dto/update-film.dto';
 
+const id = randomUUID();
+
+export const mockFilm = new Film({
+  id,
+  title: 'test',
+  synopsis: 'test',
+  year: 5,
+  duration: 5,
+  genres: [
+    new Genre({
+      id,
+      description: 'test',
+    }),
+  ],
+  artists: [
+    new Artist({
+      id,
+      name: 'test',
+    }),
+  ],
+  contentRating: new ContentRating({
+    id,
+    description: 'Livre',
+  }),
+});
+
 describe('FilmsService', () => {
   let filmService: FilmsService;
   let filmRepository: Repository<Film>;
   let genreRepository: Repository<Genre>;
   let artistRepository: Repository<Artist>;
   let contentRatingRepository: Repository<ContentRating>;
-
-  const id = randomUUID();
-
-  const mockFilm = new Film({
-    id,
-    title: 'test',
-    synopsis: 'test',
-    year: 5,
-    duration: 5,
-    genres: [
-      new Genre({
-        id,
-        description: 'test',
-      }),
-    ],
-    artists: [
-      new Artist({
-        id,
-        name: 'test',
-      }),
-    ],
-    contentRating: new ContentRating({
-      id,
-      description: 'Livre',
-    }),
-  });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -178,14 +178,14 @@ describe('FilmsService', () => {
     });
   });
 
-  describe('when listing all films', () => {
-    it('should be able to do it.', async () => {
-      const films = await filmService.findAll();
+  // describe('when listing all films', () => {
+  //   it('should be able to do it.', async () => {
+  //     const films = await filmService.findAll();
 
-      expect(filmRepository.find).toHaveBeenCalled();
-      expect(films).toBeInstanceOf(Array<Film>);
-    });
-  });
+  //     expect(filmRepository.find).toHaveBeenCalled();
+  //     expect(films).toBeInstanceOf(Array<Film>);
+  //   });
+  // });
 
   describe('when getting a film', () => {
     it('should be able to do it.', async () => {

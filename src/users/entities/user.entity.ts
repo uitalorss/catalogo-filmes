@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { Evaluation } from 'src/evaluation/entities/evaluation.entity';
+import { Evaluation } from '../../evaluation/entities/evaluation.entity';
 import {
   Column,
   CreateDateColumn,

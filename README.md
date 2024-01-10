@@ -73,9 +73,12 @@ Caso tenha o Docker e o docker compose instalado na máquina, basta utilizar o c
 - [x] É possível cadastrar filmes.
 - [x] É possível listar filmes.
 - [x] É possível listar um filme de acordo com o seu id.
-- [ ] É possível pesquisar filmes por gênero, artistas ou classificação indicativa.
+- [x] É possível pesquisar filmes por gênero, artistas ou classificação indicativa.
 - [x] É possível atualizar informações de um filme.
 - [x] É possível excluir um filme.
+- [x] É possível atribuir uma avaliação com comentário(opcional) a um filme.
+- [x] É possível atualizar uma avaliação.
+- [x] É possível excluir uma avaliação.
 
 ## 📫 Contribuindo para Catálogo de filmes
 

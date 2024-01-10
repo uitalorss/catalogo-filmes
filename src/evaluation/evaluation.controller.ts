@@ -5,12 +5,14 @@ import {
   HttpCode,
   Param,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { EvaluationService } from './evaluation.service';
 import { CreateEvaluationRequest } from './dto/create-evaluation.dto';
 import { authGuard } from 'src/auth/auth.guard';
+import { updateEvaluationDto } from './dto/update-evaluation.dto';
 
 @Controller('films/evaluation')
 export class EvaluationController {
@@ -31,6 +33,22 @@ export class EvaluationController {
       user_id: req.user,
     });
     return evaluation;
+  }
+
+  @Put(':id')
+  @UseGuards(authGuard)
+  @HttpCode(204)
+  public async update(
+    @Req() req,
+    @Param('id') id: string,
+    @Body() updaEvaluationDto: updateEvaluationDto,
+  ) {
+    return await this.evaluationService.update({
+      user_id: req.user,
+      evaluation_id: id,
+      comment: updaEvaluationDto.comment,
+      rating: updaEvaluationDto.rating,
+    });
   }
 
   @Delete(':id')

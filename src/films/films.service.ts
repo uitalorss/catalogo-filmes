@@ -83,6 +83,7 @@ export class FilmsService {
       .createQueryBuilder('films')
       .leftJoin('films.genres', 'genre')
       .leftJoin('films.artists', 'artist')
+      .leftJoinAndSelect('films.evaluations', 'evaluation')
       .leftJoinAndSelect('films.genres', 'genres')
       .leftJoinAndSelect('films.artists', 'artists')
       .leftJoinAndSelect('films.contentRating', 'contentRating');
@@ -121,6 +122,7 @@ export class FilmsService {
         artists: true,
         genres: true,
         contentRating: true,
+        evaluations: true,
       },
     });
     if (!film) {

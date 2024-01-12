@@ -1,10 +1,6 @@
 import 'dotenv/config';
 import { MailerService } from '@nestjs-modules/mailer';
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { SendMailForgotPasswordDto } from './dto/send-mail-dto';
 import { UserTokenService } from '../user-token/user-token.service';
@@ -24,9 +20,6 @@ export class EmailService {
       throw new NotFoundException('Usuário não encontrado.');
     }
     const userToken = await this.userTokenService.generateToken(user.id);
-    if (!userToken) {
-      throw new BadRequestException('Token não gerado.');
-    }
 
     await this.mailerService.sendMail({
       from: `${process.env.MAIL_FROM} <${process.env.MAIL_FROM}>`,

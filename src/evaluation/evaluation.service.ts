@@ -66,24 +66,30 @@ export class EvaluationService {
     user_id,
     evaluation_id,
   }: updateEvaluationDto) {
-    const evaluation = await this.evaluationRepository.preload({
-      id: evaluation_id,
-      user: {
-        id: user_id,
+    const evaluationAlreadyExists = await this.evaluationRepository.findOne({
+      where: {
+        id: evaluation_id,
       },
-      comment,
-      rating,
+      relations: {
+        user: true,
+      },
     });
 
-    if (!evaluation) {
+    if (!evaluationAlreadyExists) {
       throw new NotFoundException({ message: 'Avaliação não existe' });
     }
 
-    if (evaluation.user.id !== user_id) {
+    if (evaluationAlreadyExists.user.id !== user_id) {
       throw new BadRequestException({
         message: 'Você não pode atualizar uma avaliação que não é sua.',
       });
     }
+
+    const evaluation = await this.evaluationRepository.preload({
+      id: evaluation_id,
+      comment,
+      rating,
+    });
 
     await this.evaluationRepository.save(evaluation);
   }

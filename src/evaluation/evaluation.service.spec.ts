@@ -11,6 +11,7 @@ import { FilmsService } from '../films/films.service';
 import { CreateEvaluationRequest } from './dto/create-evaluation.dto';
 import { updateEvaluationRequest } from './dto/update-evaluation.dto';
 import { User } from '../users/entities/user.entity';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 const id = randomUUID();
 const idUser = '7b9d6566-b31d-4d87-a260-caf30015287c';
@@ -88,7 +89,7 @@ describe('EvaluationService', () => {
       const evaluation = await evaluationService.create({
         comment: createEvaluation.comment,
         rating: createEvaluation.rating,
-        user_id: id,
+        user_id: idUser,
         film_id: id,
       });
 
@@ -99,6 +100,21 @@ describe('EvaluationService', () => {
       expect(evaluationRepository.save).toHaveBeenCalled();
       expect(evaluation).toStrictEqual(mockEvaluation);
     });
+
+    it('should not be able to create if user has been already evaluated it.', async () => {
+      jest
+        .spyOn(evaluationRepository, 'findOne')
+        .mockReturnValue(Promise.resolve(mockEvaluation));
+
+      expect(
+        evaluationService.create({
+          comment: createEvaluation.comment,
+          rating: createEvaluation.rating,
+          user_id: idUser,
+          film_id: id,
+        }),
+      ).rejects.toThrow(BadRequestException);
+    });
   });
 
   describe('when updating an evaluation', () => {
@@ -107,6 +123,9 @@ describe('EvaluationService', () => {
       comment: 'test',
     };
     it('should be able to do it.', async () => {
+      jest
+        .spyOn(evaluationRepository, 'findOne')
+        .mockReturnValue(Promise.resolve(mockEvaluation));
       const evaluationToUpdate = await evaluationService.update({
         rating: updateEvaluation.rating,
         comment: updateEvaluation.comment,
@@ -117,6 +136,32 @@ describe('EvaluationService', () => {
       expect(evaluationRepository.preload).toHaveBeenCalled();
       expect(evaluationRepository.save).toHaveBeenCalled();
       expect(evaluationToUpdate).toBeUndefined();
+    });
+
+    it('should not be able to update if evaluation does not exist.', async () => {
+      expect(
+        evaluationService.update({
+          rating: updateEvaluation.rating,
+          comment: updateEvaluation.comment,
+          user_id: idUser,
+          evaluation_id: id,
+        }),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it("should not be able to update if requests user doesn't match to evaluations user.", async () => {
+      jest
+        .spyOn(evaluationRepository, 'findOne')
+        .mockReturnValue(Promise.resolve(mockEvaluation));
+
+      expect(
+        evaluationService.update({
+          rating: updateEvaluation.rating,
+          comment: updateEvaluation.comment,
+          user_id: id,
+          evaluation_id: id,
+        }),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -132,6 +177,22 @@ describe('EvaluationService', () => {
       expect(evaluationRepository.findOne).toHaveBeenCalled();
       expect(evaluationRepository.remove).toHaveBeenCalled();
       expect(evaluationToDelete).toBeUndefined();
+    });
+
+    it('should not be able to delete if evaluation does not exist', async () => {
+      expect(
+        evaluationService.delete({ evaluation_id: id, user_id: idUser }),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it("Should not be able to delete if requests user doesn't match to evaluations user", async () => {
+      jest
+        .spyOn(evaluationRepository, 'findOne')
+        .mockReturnValue(Promise.resolve(mockEvaluation));
+
+      expect(
+        evaluationService.delete({ evaluation_id: id, user_id: id }),
+      ).rejects.toThrow(BadRequestException);
     });
   });
 });

@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { CreateFilmDto } from './dto/create-film.dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { UpdateFilmDTO } from './dto/update-film.dto';
+import { searchQueryDto } from './dto/search-query.dto';
 
 const id = randomUUID();
 
@@ -58,6 +59,11 @@ describe('FilmsService', () => {
             findOne: jest.fn().mockReturnValue(mockFilm),
             preload: jest.fn().mockReturnValue(mockFilm),
             remove: jest.fn().mockReturnValue(undefined),
+            createQueryBuilder: jest.fn(() => ({
+              leftJoin: jest.fn().mockReturnThis(),
+              leftJoinAnSelect: jest.fn().mockReturnThis(),
+              getMany: jest.fn().mockReturnThis(),
+            })),
           },
         },
         {
@@ -178,14 +184,53 @@ describe('FilmsService', () => {
     });
   });
 
-  // describe('when listing all films', () => {
-  //   it('should be able to do it.', async () => {
-  //     const films = await filmService.findAll();
+  describe('when listing all films', () => {
+    const query: searchQueryDto = {};
 
-  //     expect(filmRepository.find).toHaveBeenCalled();
-  //     expect(films).toBeInstanceOf(Array<Film>);
-  //   });
-  // });
+    const createQueryBuilder = {
+      leftJoin: jest.fn().mockImplementation(() => {
+        return createQueryBuilder;
+      }),
+      leftJoinAndSelect: jest.fn().mockImplementation(() => {
+        return createQueryBuilder;
+      }),
+
+      where: jest.fn().mockImplementation(() => {
+        return createQueryBuilder;
+      }),
+
+      andWhere: jest.fn().mockImplementation(() => {
+        return createQueryBuilder;
+      }),
+
+      getMany: jest.fn().mockImplementation(() => {
+        return [mockFilm];
+      }),
+    };
+
+    it('should be able to do it without query params', async () => {
+      const films = await filmService.findAll(query);
+
+      expect(filmRepository.find).toHaveBeenCalled();
+      expect(films).toBeInstanceOf(Array<Film>);
+    });
+
+    it('should be able to do it with query params', async () => {
+      jest
+        .spyOn(filmRepository, 'createQueryBuilder')
+        .mockImplementation(() => createQueryBuilder);
+
+      query.artist = 'test';
+      query.contentRating = 'Livre';
+      query.genre = 'test';
+
+      const films = await filmService.findAll(query);
+
+      expect(filmRepository.createQueryBuilder).toHaveBeenCalled();
+      expect(films).toBeInstanceOf(Array<Film>);
+      expect(films).toStrictEqual([mockFilm]);
+    });
+  });
 
   describe('when getting a film', () => {
     it('should be able to do it.', async () => {

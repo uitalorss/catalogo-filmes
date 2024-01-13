@@ -28,7 +28,7 @@ export const dataSourceTest: DataSourceOptions = {
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
   synchronize: true,
-  entities: [User, Film, Artist, Genre, ContentRating, UserToken],
+  entities: [User, Film, Artist, Genre, ContentRating, UserToken, Evaluation],
 };
 
 export const dataSource = new DataSource({

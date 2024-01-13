@@ -5,7 +5,7 @@ import { UsersModule } from '../users/users.module';
 import { FilmsModule } from '../films/films.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Evaluation } from './entities/evaluation.entity';
-import { UserTokenModule } from 'src/user-token/user-token.module';
+import { UserTokenModule } from '../user-token/user-token.module';
 
 @Module({
   imports: [

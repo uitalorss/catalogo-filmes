@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { ExecutionContext, INestApplication } from '@nestjs/common';
 import { Evaluation } from './entities/evaluation.entity';
 import { Film } from '../films/entities/film.entity';
 import { User } from '../users/entities/user.entity';
@@ -10,6 +10,7 @@ import { DataSource, Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
 import { FilmsService } from '../films/films.service';
 import request from 'supertest';
+import { authGuard } from '../auth/auth.guard';
 
 describe('EvaluationController', () => {
   let app: INestApplication;
@@ -22,7 +23,7 @@ describe('EvaluationController', () => {
   let users: User[];
 
   beforeAll(async () => {
-    module: await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [
         EvaluationModule,
         TypeOrmModule.forRootAsync({
@@ -31,7 +32,16 @@ describe('EvaluationController', () => {
           },
         }),
       ],
-    }).compile();
+    })
+      .overrideGuard(authGuard)
+      .useValue({
+        canActivate: (context: ExecutionContext) => {
+          const req = context.switchToHttp().getRequest();
+          req.user = users[0].id;
+          return true;
+        },
+      })
+      .compile();
 
     app = module.createNestApplication();
     await app.init();
@@ -70,15 +80,15 @@ describe('EvaluationController', () => {
   describe('POST /films/evaluation/:id', () => {
     beforeAll(async () => {
       await usersService.create({
-        name: 'test',
+        name: 'teste pra ser feito',
         email: 'test1@test.com',
-        password: 'test',
+        password: 'testtesst',
       });
 
       await filmsService.create({
-        title: 'test',
-        synopsis: 'test',
-        year: 5,
+        title: 'teste pra ser feito',
+        synopsis: 'teste pra ser feito',
+        year: 1909,
         duration: 5,
         genres: ['test'],
         artists: ['test'],
@@ -91,7 +101,7 @@ describe('EvaluationController', () => {
         .post(`/films/evaluation/${films[0].id}`)
         .send({
           comment: 'test',
-          rating: 'test',
+          rating: 10,
           user_id: `${users[0].id}`,
           film_id: `${films[0].id}`,
         })

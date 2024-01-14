@@ -17,8 +17,10 @@ describe('EvaluationController', () => {
   let module: TestingModule;
   let filmRepository: Repository<Film>;
   let userRepository: Repository<User>;
+  let evaluationRepository: Repository<Evaluation>;
   let usersService: UsersService;
   let filmsService: FilmsService;
+  let evaluations: Evaluation[];
   let films: Film[];
   let users: User[];
 
@@ -54,6 +56,7 @@ describe('EvaluationController', () => {
     const dataSource = await new DataSource(dataSourceTest).initialize();
     filmRepository = dataSource.getRepository(Film);
     userRepository = dataSource.getRepository(User);
+    evaluationRepository = dataSource.getRepository(Evaluation);
 
     films = await filmRepository.find({
       relations: {
@@ -66,6 +69,9 @@ describe('EvaluationController', () => {
         evaluations: true,
       },
     });
+
+    evaluations = await evaluationRepository.find();
+
     await dataSource.destroy();
   });
 
@@ -95,7 +101,6 @@ describe('EvaluationController', () => {
         contentRating: 'Livre',
       });
     });
-
     it('Should be able to create an evaluation', async () => {
       const res = await request(app.getHttpServer())
         .post(`/films/evaluation/${films[0].id}`)
@@ -108,6 +113,29 @@ describe('EvaluationController', () => {
         .expect(201);
 
       expect(res.body).toHaveProperty('id');
+    });
+  });
+
+  describe('PUT /films/evaluation/:id', () => {
+    it('Should be able to update an evaluation', async () => {
+      await request(app.getHttpServer())
+        .put(`/films/evaluation/${evaluations[0].id}`)
+        .send({
+          comment: 'update Test',
+          rating: 9,
+          user_id: users[0].id,
+          evaluation_id: evaluations[0].id,
+        })
+        .expect(204);
+    });
+  });
+
+  describe('DELETE /films/evaluation/:id', () => {
+    it('Should be able to delete an evaluation', async () => {
+      await request(app.getHttpServer())
+        .delete(`/films/evaluation/${evaluations[0].id}`)
+        .send({ user_id: users[0].id, evaluation_id: evaluations[0].id })
+        .expect(204);
     });
   });
 });

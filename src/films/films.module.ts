@@ -6,9 +6,13 @@ import { Film } from './entities/film.entity';
 import { ContentRating } from './entities/contentRating.entity';
 import { Genre } from './entities/genre.entity';
 import { Artist } from './entities/artist.entity';
+import { UsersModule } from '../users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Film, Genre, Artist, ContentRating])],
+  imports: [
+    UsersModule,
+    TypeOrmModule.forFeature([Film, Genre, Artist, ContentRating]),
+  ],
   controllers: [FilmsController],
   providers: [FilmsService],
   exports: [FilmsService],

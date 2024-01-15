@@ -11,10 +11,13 @@ import { dataSourceTest } from '../database/data-source';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { EmailModule } from './email.module';
+import { UsersService } from '../users/users.service';
+import { User } from '../users/entities/user.entity';
 
 describe('UsersController', () => {
   let app: INestApplication;
   let module: TestingModule;
+  let usersService: UsersService;
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
@@ -53,6 +56,8 @@ describe('UsersController', () => {
 
     app = module.createNestApplication();
     await app.init();
+
+    usersService = module.get<UsersService>(UsersService);
   });
 
   beforeEach(async () => {
@@ -62,10 +67,21 @@ describe('UsersController', () => {
   });
 
   afterAll(async () => {
+    const dataSource = app.get(DataSource);
+
+    await dataSource.createQueryBuilder().delete().from(User).execute();
+
     await module.close();
   });
 
   describe('POST /email', () => {
+    beforeAll(async () => {
+      await usersService.create({
+        name: 'teste pra ser feito',
+        email: 'test@test.com',
+        password: 'testtesst',
+      });
+    });
     it('should be able to generate a token and send email', async () => {
       const res = await request(app.getHttpServer())
         .post('/email')

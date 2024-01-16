@@ -1,6 +1,8 @@
+import { createZodDto, patchNestJsSwagger } from 'nestjs-zod';
 import { createUserSchema } from './create-user.dto';
-import { z } from 'zod';
+
+patchNestJsSwagger();
 
 export const partialUserSchema = createUserSchema.partial();
 
-export type UpdateUserDto = z.infer<typeof partialUserSchema>;
+export class UpdateUserDto extends createZodDto(partialUserSchema) {}

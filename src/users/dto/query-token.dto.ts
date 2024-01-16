@@ -1,3 +1,4 @@
+import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
 export const queryTokenSchema = z.object({
@@ -6,4 +7,6 @@ export const queryTokenSchema = z.object({
     .uuid({ message: 'Informe um token válido' }),
 });
 
-export type queryTokenDto = z.infer<typeof queryTokenSchema>;
+export class queryTokenDto extends createZodDto(queryTokenSchema) {
+  token: string;
+}

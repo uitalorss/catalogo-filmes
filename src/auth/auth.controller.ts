@@ -1,8 +1,8 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthLoginDto, loginSchema } from './dto/authLogin-dto';
-import { ZodValidationPipe } from '../users/helpers/ZodValidationPipe';
 import { ApiTags } from '@nestjs/swagger';
+import { ZodValidationPipe } from 'src/helpers/ZodValidationPipe';
 
 @ApiTags('Users')
 @Controller('auth')

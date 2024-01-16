@@ -1,4 +1,7 @@
+import { createZodDto, patchNestJsSwagger } from 'nestjs-zod';
 import { z } from 'zod';
+
+patchNestJsSwagger();
 
 export const resetPasswordSchema = z
   .object({
@@ -11,4 +14,4 @@ export const resetPasswordSchema = z
     message: 'As senhas não coincidem',
   });
 
-export type ResetPasswordDto = z.infer<typeof resetPasswordSchema>;
+export class ResetPasswordDto extends createZodDto(resetPasswordSchema) {}

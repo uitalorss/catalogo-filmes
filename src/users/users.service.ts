@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -48,7 +49,7 @@ export class UsersService {
   public async findOne(id: string) {
     const user = await this.userRepository.findOneBy({ id });
     if (!user) {
-      throw new NotFoundException('Usuário não encontrado');
+      throw new NotFoundException('Usuário não encontrado.');
     }
     return user;
   }
@@ -89,7 +90,7 @@ export class UsersService {
   public async remove(id: string) {
     const user = await this.userRepository.findOneBy({ id });
     if (!user) {
-      throw new NotFoundException('Usuário não encontrado');
+      throw new NotFoundException('Usuário não encontrado.');
     }
     await this.userRepository.remove(user);
   }
@@ -108,7 +109,7 @@ export class UsersService {
   ) {
     const userToken = await this.userTokenService.findByToken(query.token);
     if (!userToken) {
-      throw new NotFoundException('Token inválido');
+      throw new UnauthorizedException('Token inválido');
     }
     const user = await this.userRepository.findOneBy({ id: userToken.user_id });
     if (!user) {

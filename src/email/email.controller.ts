@@ -4,7 +4,7 @@ import {
   SendMailForgotPasswordDto,
   sendMailForgotPasswordSchema,
 } from './dto/send-mail-dto';
-import { ZodValidationPipe } from '../users/helpers/ZodValidationPipe';
+import { ZodValidationPipe } from '../helpers/ZodValidationPipe';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Users')

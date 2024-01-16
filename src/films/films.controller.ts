@@ -14,7 +14,7 @@ import {
 import { FilmsService } from './films.service';
 import { CreateFilmDto, createFilmSchema } from './dto/create-film.dto';
 import { instanceToInstance } from 'class-transformer';
-import { ZodValidationPipe } from '../users/helpers/ZodValidationPipe';
+import { ZodValidationPipe } from '../helpers/ZodValidationPipe';
 import { UpdateFilmDTO, partialFilmSchema } from './dto/update-film.dto';
 import { searchQueryDto, searchQuerySchema } from './dto/search-query.dto';
 import { authGuard } from '../auth/auth.guard';

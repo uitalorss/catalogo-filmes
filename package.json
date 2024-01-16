@@ -21,6 +21,7 @@
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/database/data-source.ts"
   },
   "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^6.3.1",
     "@nestjs-modules/mailer": "^1.10.3",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.1.1",
@@ -28,6 +29,7 @@
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/swagger": "^7.2.0",
     "@nestjs/typeorm": "^10.0.1",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
@@ -35,10 +37,12 @@
     "date-fns": "^3.0.1",
     "dotenv": "^16.3.1",
     "handlebars": "^4.7.8",
+    "nestjs-zod": "^3.0.0",
     "nodemailer": "^6.9.7",
     "pg": "^8.11.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
+    "swagger-ui-express": "^5.0.0",
     "typeorm": "^0.3.17",
     "zod": "^3.22.4"
   },

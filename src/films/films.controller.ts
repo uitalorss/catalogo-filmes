@@ -18,7 +18,9 @@ import { ZodValidationPipe } from '../users/helpers/ZodValidationPipe';
 import { UpdateFilmDTO, partialFilmSchema } from './dto/update-film.dto';
 import { searchQueryDto, searchQuerySchema } from './dto/search-query.dto';
 import { authGuard } from '../auth/auth.guard';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Films')
 @Controller('films')
 export class FilmsController {
   constructor(private readonly filmsService: FilmsService) {}

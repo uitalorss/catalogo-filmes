@@ -13,7 +13,9 @@ import { EvaluationService } from './evaluation.service';
 import { CreateEvaluationRequest } from './dto/create-evaluation.dto';
 import { authGuard } from '../auth/auth.guard';
 import { updateEvaluationDto } from './dto/update-evaluation.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Evaluations')
 @Controller('films/evaluation')
 export class EvaluationController {
   constructor(private readonly evaluationService: EvaluationService) {}

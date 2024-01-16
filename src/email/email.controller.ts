@@ -5,7 +5,9 @@ import {
   sendMailForgotPasswordSchema,
 } from './dto/send-mail-dto';
 import { ZodValidationPipe } from '../users/helpers/ZodValidationPipe';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('email')
 export class EmailController {
   constructor(private emailService: EmailService) {}

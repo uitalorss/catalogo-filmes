@@ -23,7 +23,9 @@ import {
   resetPasswordSchema,
 } from './dto/reset-password.dto';
 import { queryTokenDto, queryTokenSchema } from './dto/query-token.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 @Entity('evaluations')
 export class Evaluation {
@@ -21,6 +22,7 @@ export class Evaluation {
   @ManyToOne(() => User, (user) => user.evaluations, {
     cascade: true,
   })
+  @Exclude()
   @JoinColumn({ name: 'user_id' })
   user: User;
   @ManyToOne(() => Film, (film) => film.evaluations, {

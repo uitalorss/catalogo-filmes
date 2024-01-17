@@ -19,6 +19,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { instanceToInstance } from 'class-transformer';
 
 @ApiTags('Evaluations')
 @Controller('films/evaluation')
@@ -43,7 +44,7 @@ export class EvaluationController {
       film_id: id,
       user_id: req.user,
     });
-    return evaluation;
+    return instanceToInstance(evaluation);
   }
 
   @ApiUnauthorizedResponse({ description: 'Sessão inválida' })

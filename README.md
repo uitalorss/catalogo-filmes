@@ -17,7 +17,7 @@ O projeto ainda está em desenvolvimento e as próximas atualizações serão vo
 - [x] Criação do ambiente de desenvolvimento com docker.
 - [x] Implementação da cobertura de testes unitários.
 - [x] Implementação dos testes de ponta-a-ponta.
-- [ ] Construção da documentação em Swagger
+- [x] Construção da documentação em Swagger
 
 ## 💻 Tecnologias utilizadas
 
@@ -26,6 +26,7 @@ O projeto ainda está em desenvolvimento e as próximas atualizações serão vo
 - Docker
 - TypeORM
 - JEST
+- Swagger
 
 ## 🚀 Instalando o Catálogo de filmes
 

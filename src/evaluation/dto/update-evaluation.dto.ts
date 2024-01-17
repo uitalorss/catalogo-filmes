@@ -1,13 +1,17 @@
-import { z } from 'zod';
 import { createEvaluationSchema } from './create-evaluation.dto';
+import { createZodDto, patchNestJsSwagger } from 'nestjs-zod';
+
+patchNestJsSwagger();
 
 export const partialEvaluationSchema = createEvaluationSchema.partial();
 
-export type updateEvaluationRequest = z.infer<typeof partialEvaluationSchema>;
+export class updateEvaluationRequest extends createZodDto(
+  partialEvaluationSchema,
+) {}
 
-export type updateEvaluationDto = {
+export class updateEvaluationDto {
   user_id: string;
   evaluation_id: string;
   rating?: number;
   comment?: string;
-};
+}

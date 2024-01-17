@@ -10,22 +10,31 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { EvaluationService } from './evaluation.service';
-import { CreateEvaluationRequest } from './dto/create-evaluation.dto';
+import { CreateEvaluationRequestDto } from './dto/create-evaluation.dto';
 import { authGuard } from '../auth/auth.guard';
 import { updateEvaluationDto } from './dto/update-evaluation.dto';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiNotFoundResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
 @ApiTags('Evaluations')
 @Controller('films/evaluation')
 export class EvaluationController {
   constructor(private readonly evaluationService: EvaluationService) {}
 
+  @ApiUnauthorizedResponse({ description: 'Sessão inválida' })
+  @ApiBadRequestResponse({
+    description: 'Você já atribuiu uma nota para esse filme',
+  })
   @Post(':id')
   @UseGuards(authGuard)
   public async create(
     @Req() req,
     @Body()
-    createEvaluationRequest: CreateEvaluationRequest,
+    createEvaluationRequest: CreateEvaluationRequestDto,
     @Param('id') id: string,
   ) {
     const evaluation = await this.evaluationService.create({
@@ -37,6 +46,11 @@ export class EvaluationController {
     return evaluation;
   }
 
+  @ApiUnauthorizedResponse({ description: 'Sessão inválida' })
+  @ApiNotFoundResponse({ description: 'Avaliação não existe' })
+  @ApiBadRequestResponse({
+    description: 'Você não pode atualizar uma avaliação que não é sua.',
+  })
   @Put(':id')
   @UseGuards(authGuard)
   @HttpCode(204)
@@ -53,6 +67,11 @@ export class EvaluationController {
     });
   }
 
+  @ApiUnauthorizedResponse({ description: 'Sessão inválida' })
+  @ApiNotFoundResponse({ description: 'Avaliação não existe' })
+  @ApiBadRequestResponse({
+    description: 'Você não pode apagar uma avaliação que nao é sua.',
+  })
   @Delete(':id')
   @UseGuards(authGuard)
   @HttpCode(204)

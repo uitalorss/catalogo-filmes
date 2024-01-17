@@ -1,4 +1,7 @@
+import { createZodDto, patchNestJsSwagger } from 'nestjs-zod';
 import { z } from 'zod';
+
+patchNestJsSwagger();
 
 export const createEvaluationSchema = z.object({
   rating: z
@@ -8,11 +11,13 @@ export const createEvaluationSchema = z.object({
   comment: z.string().optional(),
 });
 
-export type CreateEvaluationRequest = z.infer<typeof createEvaluationSchema>;
+export class CreateEvaluationRequestDto extends createZodDto(
+  createEvaluationSchema,
+) {}
 
-export type createEvaluationDto = {
+export class createEvaluationDto {
   user_id: string;
   film_id: string;
   rating: number;
   comment?: string;
-};
+}

@@ -1,4 +1,7 @@
+import { createZodDto, patchNestJsSwagger } from 'nestjs-zod';
 import { z } from 'zod';
+
+patchNestJsSwagger();
 
 export const createFilmSchema = z.object({
   title: z
@@ -30,4 +33,4 @@ export const createFilmSchema = z.object({
   contentRating: z.enum(['Livre', '+12', '+14', '+16', '+18']),
 });
 
-export type CreateFilmDto = z.infer<typeof createFilmSchema>;
+export class CreateFilmDto extends createZodDto(createFilmSchema) {}

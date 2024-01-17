@@ -1,4 +1,7 @@
+import { createZodDto, patchNestJsSwagger } from 'nestjs-zod';
 import { z } from 'zod';
+
+patchNestJsSwagger();
 
 export const searchQuerySchema = z.object({
   genre: z.string().optional().nullable(),
@@ -9,4 +12,4 @@ export const searchQuerySchema = z.object({
     .nullable(),
 });
 
-export type searchQueryDto = z.infer<typeof searchQuerySchema>;
+export class searchQueryDto extends createZodDto(searchQuerySchema) {}

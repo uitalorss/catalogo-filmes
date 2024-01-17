@@ -51,6 +51,7 @@ export class UsersController {
     return res.json({ message: 'Cliente Cadastrado com sucesso' });
   }
 
+  @ApiUnauthorizedResponse({ description: 'Sessão inválida' })
   @UseGuards(authGuard)
   @Get()
   public async findOne(@Req() req, @Res() res): Promise<ResponseUserDto> {
@@ -59,7 +60,7 @@ export class UsersController {
   }
 
   @ApiNoContentResponse()
-  @ApiUnauthorizedResponse({ description: 'Token inválido' })
+  @ApiUnauthorizedResponse({ description: 'Sessão inválida' })
   @ApiNotFoundResponse({ description: 'Usuário não encontrado.' })
   @HttpCode(204)
   @UseGuards(authGuard)
@@ -73,7 +74,7 @@ export class UsersController {
   }
 
   @ApiNoContentResponse()
-  @ApiUnauthorizedResponse({ description: 'Token inválido' })
+  @ApiUnauthorizedResponse({ description: 'Sessão inválida' })
   @ApiNotFoundResponse({ description: 'Usuário não encontrado.' })
   @HttpCode(204)
   @UseGuards(authGuard)

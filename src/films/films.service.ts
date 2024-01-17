@@ -12,6 +12,7 @@ import { Genre } from './entities/genre.entity';
 import { ContentRating } from './entities/contentRating.entity';
 import { UpdateFilmDTO } from './dto/update-film.dto';
 import { searchQueryDto } from './dto/search-query.dto';
+import { ResponseFilmDto } from './dto/response-film.dto';
 
 @Injectable()
 export class FilmsService {
@@ -36,7 +37,7 @@ export class FilmsService {
     genres,
     artists,
     contentRating,
-  }: CreateFilmDto) {
+  }: CreateFilmDto): Promise<ResponseFilmDto> {
     const filmAlreadyExists = await this.filmRepository.findOneBy({ title });
     if (filmAlreadyExists) {
       throw new BadRequestException('Esse filme já existe.');
@@ -65,7 +66,7 @@ export class FilmsService {
     return film;
   }
 
-  public async findAll(query?: searchQueryDto) {
+  public async findAll(query?: searchQueryDto): Promise<ResponseFilmDto[]> {
     if (Object.keys(query).length === 0) {
       const films = await this.filmRepository.find({
         relations: {
@@ -112,7 +113,7 @@ export class FilmsService {
     return films;
   }
 
-  public async findOne(id: string) {
+  public async findOne(id: string): Promise<ResponseFilmDto> {
     const film = await this.filmRepository.findOne({
       where: {
         id,

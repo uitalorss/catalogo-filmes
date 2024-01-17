@@ -1,6 +1,8 @@
+import { createZodDto, patchNestJsSwagger } from 'nestjs-zod';
 import { createFilmSchema } from './create-film.dto';
-import { z } from 'zod';
+
+patchNestJsSwagger();
 
 export const partialFilmSchema = createFilmSchema.partial();
 
-export type UpdateFilmDTO = z.infer<typeof partialFilmSchema>;
+export class UpdateFilmDTO extends createZodDto(partialFilmSchema) {}

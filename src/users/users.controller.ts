@@ -58,6 +58,9 @@ export class UsersController {
     return res.json(instanceToInstance(user));
   }
 
+  @ApiNoContentResponse()
+  @ApiUnauthorizedResponse({ description: 'Token inválido' })
+  @ApiNotFoundResponse({ description: 'Usuário não encontrado.' })
   @HttpCode(204)
   @UseGuards(authGuard)
   @Put()
@@ -70,6 +73,7 @@ export class UsersController {
   }
 
   @ApiNoContentResponse()
+  @ApiUnauthorizedResponse({ description: 'Token inválido' })
   @ApiNotFoundResponse({ description: 'Usuário não encontrado.' })
   @HttpCode(204)
   @UseGuards(authGuard)
@@ -78,8 +82,8 @@ export class UsersController {
     return this.usersService.remove(req.user);
   }
 
-  @ApiUnauthorizedResponse({ description: 'Token inválido' })
   @ApiNotFoundResponse({ description: 'Usuário não encontrado.' })
+  @ApiNoContentResponse()
   @HttpCode(204)
   @Patch('reset')
   resetPassword(

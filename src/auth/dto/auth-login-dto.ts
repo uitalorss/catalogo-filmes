@@ -1,4 +1,7 @@
+import { createZodDto, patchNestJsSwagger } from 'nestjs-zod';
 import { z } from 'zod';
+
+patchNestJsSwagger();
 
 export const loginSchema = z.object({
   email: z
@@ -7,4 +10,4 @@ export const loginSchema = z.object({
   password: z.string({ required_error: 'Campo senha é obrigatório.' }),
 });
 
-export type AuthLoginDto = z.infer<typeof loginSchema>;
+export class AuthLoginDto extends createZodDto(loginSchema) {}

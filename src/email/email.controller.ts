@@ -5,13 +5,14 @@ import {
   sendMailForgotPasswordSchema,
 } from './dto/send-mail-dto';
 import { ZodValidationPipe } from '../helpers/ZodValidationPipe';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiNotFoundResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Users')
 @Controller('email')
 export class EmailController {
   constructor(private emailService: EmailService) {}
 
+  @ApiNotFoundResponse({ description: 'Usuário não encontrado.' })
   @HttpCode(201)
   @Post()
   public async send(

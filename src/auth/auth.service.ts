@@ -1,9 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
-import { AuthLoginDto } from './dto/authLogin-dto';
+import { AuthLoginDto } from './dto/auth-login-dto';
 import { compare } from 'bcrypt';
-import { responseAuthDto } from './dto/responseAuth-dto';
+import { ResponseAuthDto } from './dto/response-auth-dto';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +11,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
-  public async login(authLoginDto: AuthLoginDto): Promise<responseAuthDto> {
+  public async login(authLoginDto: AuthLoginDto): Promise<ResponseAuthDto> {
     const user = await this.usersService.findByEmail(authLoginDto.email);
     if (!user) {
       throw new UnauthorizedException('Email e/ou senha estão incorretos.');

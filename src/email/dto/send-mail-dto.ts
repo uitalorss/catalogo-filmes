@@ -1,4 +1,7 @@
+import { createZodDto, patchNestJsSwagger } from 'nestjs-zod';
 import { z } from 'zod';
+
+patchNestJsSwagger();
 
 export const sendMailForgotPasswordSchema = z.object({
   email: z
@@ -6,6 +9,6 @@ export const sendMailForgotPasswordSchema = z.object({
     .email({ message: 'informe um email válido' }),
 });
 
-export type SendMailForgotPasswordDto = z.infer<
-  typeof sendMailForgotPasswordSchema
->;
+export class SendMailForgotPasswordDto extends createZodDto(
+  sendMailForgotPasswordSchema,
+) {}

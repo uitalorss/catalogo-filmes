@@ -4,7 +4,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from 'crypto';
 import { User } from '../users/entities/user.entity';
-import { AuthLoginDto } from './dto/authLogin-dto';
+import { AuthLoginDto } from './dto/auth-login-dto';
 import { UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 

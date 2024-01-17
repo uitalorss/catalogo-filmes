@@ -1,4 +1,3 @@
-import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
 export const queryTokenSchema = z.object({
@@ -6,7 +5,3 @@ export const queryTokenSchema = z.object({
     .string({ required_error: 'Campo não pode ficar vazio' })
     .uuid({ message: 'Informe um token válido' }),
 });
-
-export class QueryTokenDto extends createZodDto(queryTokenSchema) {
-  token: string;
-}

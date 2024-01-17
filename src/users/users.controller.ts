@@ -15,33 +15,34 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto, createUserSchema } from './dto/create-user.dto';
 import { UpdateUserDto, partialUserSchema } from './dto/update-user.dto';
+import { ZodValidationPipe } from '../helpers/ZodValidationPipe';
 import { instanceToInstance } from 'class-transformer';
 import { authGuard } from '../auth/auth.guard';
 import {
   ResetPasswordDto,
   resetPasswordSchema,
 } from './dto/reset-password.dto';
-import { queryTokenDto, queryTokenSchema } from './dto/query-token.dto';
+
 import {
   ApiBadRequestResponse,
-  ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
+  ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ZodValidationPipe } from 'src/helpers/ZodValidationPipe';
 import { ResponseUserDto } from './dto/response-user.dto';
+import { QueryTokenDto, queryTokenSchema } from './dto/query-token.dto';
 
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ApiCreatedResponse({ description: 'Cliente Cadastrado com sucesso' })
-  @ApiBadRequestResponse({ description: 'Usuário com email já cadastrado' })
   @Post()
   @HttpCode(201)
+  @ApiResponse({ status: 201, description: 'Cliente Cadastrado com sucesso' })
+  @ApiBadRequestResponse({ description: 'Usuário com email já cadastrado' })
   public async create(
     @Res() res,
     @Body(new ZodValidationPipe(createUserSchema)) createUserDto: CreateUserDto,
@@ -50,7 +51,6 @@ export class UsersController {
     return res.json({ message: 'Cliente Cadastrado com sucesso' });
   }
 
-  @ApiNotFoundResponse({ description: 'Usuário não encontrado.' })
   @UseGuards(authGuard)
   @Get()
   public async findOne(@Req() req, @Res() res): Promise<ResponseUserDto> {
@@ -58,9 +58,6 @@ export class UsersController {
     return res.json(instanceToInstance(user));
   }
 
-  @ApiNoContentResponse()
-  @ApiNotFoundResponse({ description: 'Usuário não encontrado.' })
-  @ApiBadRequestResponse({ description: 'Esse email já está em uso.' })
   @HttpCode(204)
   @UseGuards(authGuard)
   @Put()
@@ -86,7 +83,7 @@ export class UsersController {
   @HttpCode(204)
   @Patch('reset')
   resetPassword(
-    @Query(new ZodValidationPipe(queryTokenSchema)) query: queryTokenDto,
+    @Query(new ZodValidationPipe(queryTokenSchema)) query: QueryTokenDto,
     @Body(new ZodValidationPipe(resetPasswordSchema))
     resetPasswordDto: ResetPasswordDto,
   ) {

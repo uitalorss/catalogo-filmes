@@ -11,9 +11,9 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { addHours, isAfter } from 'date-fns';
 import { ResetPasswordDto } from './dto/reset-password.dto';
-import { queryTokenDto } from './dto/query-token.dto';
 import { UserTokenService } from '../user-token/user-token.service';
 import { hash } from 'bcrypt';
+import { QueryTokenDto } from './dto/query-token.dto';
 
 @Injectable()
 export class UsersService {
@@ -104,7 +104,7 @@ export class UsersService {
   }
 
   public async resetPassword(
-    query: queryTokenDto,
+    query: QueryTokenDto,
     resetPasswordDto: ResetPasswordDto,
   ) {
     const userToken = await this.userTokenService.findByToken(query.token);

@@ -17,8 +17,8 @@ jobs:
     - name: Build the Docker image
       run: docker compose up
     env:
-    - DB_HOST: catalogo_db
-    - DB_PORT: 5432
-    - DB_USER: postgres
-    - DB_PASS: postgres
-    - DB_NAME: catalogofilmes
+      DB_HOST: catalogo_db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASS: postgres
+      DB_NAME: catalogofilmes

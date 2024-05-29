@@ -11,9 +11,15 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    environment: .env
+    environment: production
 
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker compose up
+    env:
+      DB_HOST: ${{env.DB_HOST}}
+      DB_PORT: ${{env.DB_PORT}}
+      DB_USER: ${{env.DB_USER}}
+      DB_PASS: ${{env.DB_PASS}}
+      DB_NAME: ${{env.DB_NAME}}

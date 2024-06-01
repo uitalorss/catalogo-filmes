@@ -22,7 +22,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Sabe environment variables
+    - name: test environment variables
       run: |
-        echo "DB_HOST=$DB_HOST\nDB_PORT=$DB_PORT\nDB_USER=$DB_USER\nDB_PASS=$DB_PASS\nDB_NAME=$DB_NAME\n" >> .env
+        echo "DB_HOST=$DB_HOST
+        DB_PORT=$DB_PORT
+        DB_USER=$DB_USER
+        DB_PASS=$DB_PASS
+        DB_NAME=$DB_NAME" >> .env
         cat .env

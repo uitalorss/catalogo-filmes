@@ -22,5 +22,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker compose up
+    - name: Sabe environment variables
+      run: |
+        echo "DB_HOST=$DB_HOST" >> .env
+        cat .env

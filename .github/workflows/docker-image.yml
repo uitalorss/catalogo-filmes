@@ -11,11 +11,16 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    environment: development
+    environment: 
+      name: development
+    env: 
+      DB_HOST: ${{ vars.DB_HOST }}
+      DB_PORT: ${{ vars.DB_PORT }}
+      DB_USER: ${{ vars.DB_USER }}
+      DB_PASS: ${{ vars.DB_PASS }}
+      DB_NAME: ${{ vars.DB_NAME }}
 
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: |
-        echo "DB_HOST=${{vars.DB_HOST}}\nDB_PORT=${{vars.DB_PORT}}\nDB_USER=${{vars.DB_USER}}\nDB_PASS=${{vars.DB_PASS}}\nDB_NAME=${{vars.DB_NAME}}" > .env  
-        docker compose up
+      run: docker compose up

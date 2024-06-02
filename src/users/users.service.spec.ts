@@ -5,7 +5,7 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { randomUUID } from 'crypto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserTokenService } from '../user-token/user-token.service';
 import { UserToken } from '../user-token/entities/userToken.entity';
@@ -215,7 +215,7 @@ describe('UsersService', () => {
 
       expect(
         usersService.resetPassword({ token: 'test' }, dataResetPassword),
-      ).rejects.toThrow(NotFoundException);
+      ).rejects.toThrow(UnauthorizedException);
     });
 
     it('should not be able to reset it if user does not exist', async () => {

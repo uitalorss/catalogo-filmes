@@ -8,7 +8,7 @@ import { randomUUID } from 'crypto';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { FilmsService } from '../films/films.service';
-import { CreateEvaluationRequest } from './dto/create-evaluation.dto';
+import { CreateEvaluationRequestDto } from './dto/create-evaluation.dto';
 import { updateEvaluationRequest } from './dto/update-evaluation.dto';
 import { User } from '../users/entities/user.entity';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
@@ -81,7 +81,7 @@ describe('EvaluationService', () => {
   });
 
   describe('when creating an evaluation', () => {
-    const createEvaluation: CreateEvaluationRequest = {
+    const createEvaluation: CreateEvaluationRequestDto = {
       rating: 10,
       comment: 'test',
     };

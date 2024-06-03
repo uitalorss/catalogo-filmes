@@ -1,4 +1,4 @@
-name: Main
+name: Pipeline CI
 
 on:
   push:
@@ -12,10 +12,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: check code 
     - uses: actions/checkout@v4
+
+    - name: run tests
     - uses: actions/setup-node@v4
       with: 
         node-version: 16
     - run: npm ci
     - run: npm run test
+
+    - name: build Docker conteiners
+    - run: docker compose up -d
+
+    - name: stop conteiners
+    - run: docker compose down
+    
 

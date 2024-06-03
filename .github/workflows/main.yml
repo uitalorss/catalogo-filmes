@@ -23,9 +23,9 @@ jobs:
     - run: npm run test
 
     - name: build Docker conteiners
-    - run: docker compose up -d
+      run: docker compose up -d
 
     - name: stop conteiners
-    - run: docker compose down
+      run: docker compose down
     
 

@@ -8,24 +8,25 @@ on:
 
 jobs:
 
-#  check:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#    - name: check code 
-#      uses: actions/checkout@v4
-#  
-#  test:
-#    runs-on: ubuntu-latest
-#    needs: check
-#    steps: 
-#      - name: run tests
-#        uses: actions/setup-node@v4
-#        with: 
-#          node-version: 16
-#      - run: |
-#          npm ci
-#          npm run test
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: check code 
+      uses: actions/checkout@v4
+  
+  test:
+    runs-on: ubuntu-latest
+    needs: check
+    steps: 
+      - name: run tests
+        uses: actions/setup-node@v4
+        with: 
+          node-version: 16
+      - run: |
+          npm ci
+          npm run test
+
   build:
     runs-on: ubuntu-latest
     environment: 
@@ -36,10 +37,16 @@ jobs:
       DB_USER: ${{ vars.DB_USER }}
       DB_PASS: ${{ vars.DB_PASS }}
       DB_NAME: ${{ vars.DB_NAME }}
+    needs: test
     steps:
       - name: build Docker conteiners
         uses: actions/checkout@v4
-      - run: docker compose up
-
+      - run: |
+          echo "DB_HOST=$DB_HOST
+          DB_PORT=$DB_PORT
+          DB_USER=$DB_USER
+          DB_PASS=$DB_PASS
+          DB_NAME=$DB_NAME" >> .env
+          docker compose up -d --build
 
 

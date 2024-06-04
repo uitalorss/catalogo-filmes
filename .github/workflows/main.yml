@@ -38,7 +38,8 @@ jobs:
       DB_NAME: ${{ vars.DB_NAME }}
     steps:
       - name: build Docker conteiners
-        run: docker compose up
+        uses: actions/checkout@v4
+      - run: docker compose up
 
 
 

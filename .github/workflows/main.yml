@@ -38,14 +38,12 @@ jobs:
       DB_NAME: ${{ vars.DB_NAME }}
     steps:
       - name: build Docker conteiners
-        uses: docker/build-push-action@v5.3.0
-      - run: |
+        run: |
           echo "DB_HOST=$DB_HOST
           DB_PORT=$DB_PORT
           DB_USER=$DB_USER
           DB_PASS=$DB_PASS
-          DB_NAME=$DB_NAME" >> .env
-          cat .env
-          docker compose up -d --build
+          DB_NAME=$DB_NAME" > .env
+          docker compose up
 
 

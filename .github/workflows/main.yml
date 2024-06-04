@@ -8,9 +8,26 @@ on:
 
 jobs:
 
-  build:
+  check:
     runs-on: ubuntu-latest
 
+    steps:
+    - name: check code 
+      uses: actions/checkout@v4
+ 
+  test:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: run tests
+        uses: actions/setup-node@v4
+        with: 
+          node-version: 16
+      - run: |
+          npm ci
+          npm run test
+
+  build:
+    runs-on: ubuntu-latest
     environment: 
       name: development
     env: 
@@ -19,26 +36,16 @@ jobs:
       DB_USER: ${{ vars.DB_USER }}
       DB_PASS: ${{ vars.DB_PASS }}
       DB_NAME: ${{ vars.DB_NAME }}
-
+    needs: test
     steps:
-    - name: check code 
-      uses: actions/checkout@v4
+      - name: build Docker conteiners
+        uses: docker/build-push-action@v5.3.0
+      - run: |
+          echo "DB_HOST=$DB_HOST
+          DB_PORT=$DB_PORT
+          DB_USER=$DB_USER
+          DB_PASS=$DB_PASS
+          DB_NAME=$DB_NAME" >> .env
+          docker compose up -d --build
 
-    - name: run tests
-      uses: actions/setup-node@v4
-      with: 
-          node-version: 16
-    - run: |
-        npm ci
-        npm run test
-
-    - name: build Docker conteiners
-      run: |
-        echo "DB_HOST=$DB_HOST
-        DB_PORT=$DB_PORT
-        DB_USER=$DB_USER
-        DB_PASS=$DB_PASS
-        DB_NAME=$DB_NAME" >> .env
-        docker compose up -d --build
-    
 

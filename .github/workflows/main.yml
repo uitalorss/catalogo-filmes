@@ -34,13 +34,7 @@ jobs:
     steps:
       - name: build Docker conteiners
         uses: actions/checkout@v4
-      - run: |
-          echo "DB_HOST=$DB_HOST
-          DB_PORT=$DB_PORT
-          DB_USER=$DB_USER
-          DB_PASS=$DB_PASS
-          DB_NAME=$DB_NAME" >> .env
-          docker compose up
+      - run: docker compose up
       - name: Stop Containers
         if: always()
         run: docker-compose -f "docker-compose.yaml" down

@@ -9,6 +9,8 @@ import { UserTokenModule } from './user-token/user-token.module';
 import { EvaluationModule } from './evaluation/evaluation.module';
 import { APP_PIPE } from '@nestjs/core';
 import { ZodValidationPipe } from 'nestjs-zod';
+import { HealthController } from './health/health.controller';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -20,8 +22,8 @@ import { ZodValidationPipe } from 'nestjs-zod';
     EmailModule,
     UserTokenModule,
     EvaluationModule,
+    HealthModule
   ],
-  controllers: [],
   providers: [
     {
       provide: APP_PIPE,

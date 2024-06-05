@@ -57,6 +57,8 @@ jobs:
           docker compose up -d
 
       - name: Health Check
-        run: curl http://localhost:3000/health; sleep 5; done
+        run: |
+          apk add curl
+          curl http://localhost:3000/health; sleep 5; done
 
 

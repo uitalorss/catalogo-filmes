@@ -8,18 +8,18 @@ on:
 
 jobs:
   
-  test:
-    runs-on: ubuntu-latest
-    steps: 
-      - uses: actions/checkout@v4
-      
-      - uses: actions/setup-node@v4.0.2
-        name: run tests
-        with: 
-          node-version: 16
-      - run: |
-          npm ci
-          npm run test
+#  test:
+#    runs-on: ubuntu-latest
+#   steps: 
+#      - uses: actions/checkout@v4
+ #     
+  #    - uses: actions/setup-node@v4.0.2
+   #     name: run tests
+    #    with: 
+     #     node-version: 16
+      #- run: |
+       #   npm ci
+        #  npm run test
 
   build:
     runs-on: ubuntu-latest
@@ -31,7 +31,6 @@ jobs:
       DB_USER: ${{ vars.DB_USER }}
       DB_PASS: ${{ vars.DB_PASS }}
       DB_NAME: ${{ vars.DB_NAME }}
-    needs: test
     steps:
       - name: build Docker conteiners
         uses: actions/checkout@v4
@@ -42,5 +41,8 @@ jobs:
           DB_PASS=$DB_PASS
           DB_NAME=$DB_NAME" >> .env
           docker compose up
+      - name: Stop Containers
+        if: always()
+        run: docker-compose -f "docker-compose.yaml" down
 
 

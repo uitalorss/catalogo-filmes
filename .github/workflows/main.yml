@@ -34,7 +34,8 @@ jobs:
     steps:
       - name: build Docker conteiners
         uses: actions/checkout@v4
-      - run: docker compose up
+      - run: docker compose up --build -d
+      
       - name: Stop Containers
         if: always()
         run: docker-compose -f "docker-compose.yaml" down

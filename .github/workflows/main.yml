@@ -8,21 +8,22 @@ on:
 
 jobs:
   
-#  test:
-#    runs-on: ubuntu-latest
-#   steps: 
-#      - uses: actions/checkout@v4
- #     
-  #    - uses: actions/setup-node@v4.0.2
-   #     name: run tests
-    #    with: 
-     #     node-version: 16
-      #- run: |
-       #   npm ci
-        #  npm run test
+  test:
+    runs-on: ubuntu-latest
+    steps: 
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-node@v4.0.2
+      name: run tests
+      with: 
+          node-version: 16
+    - run: |
+          npm ci
+          npm run test
 
   build:
     runs-on: ubuntu-latest
+    needs: test
     environment: 
       name: development
     env: 

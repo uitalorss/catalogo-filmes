@@ -11,9 +11,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps: 
-      - name: run tests
-        uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4.0.2
+        name: run tests
         with: 
           node-version: 16
       - run: |
@@ -40,6 +41,6 @@ jobs:
           DB_USER=$DB_USER
           DB_PASS=$DB_PASS
           DB_NAME=$DB_NAME" >> .env
-          docker compose up -d --build
+          docker compose up
 
 

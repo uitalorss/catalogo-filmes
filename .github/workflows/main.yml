@@ -58,7 +58,7 @@ jobs:
 
       - name: Health Check
         run: |
-          apk add curl
-          curl http://localhost:3000/health; sleep 5; done
+          docker compose exec app sh -c "apk add curl"
+          docker compose exe app sh -c "curl http://localhost:3000/health; sleep 5; done"
 
 
